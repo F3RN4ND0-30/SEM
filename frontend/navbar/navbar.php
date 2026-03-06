@@ -24,7 +24,7 @@ function obtenerPrimerNombre($nombre_completo)
 
         <ul class="list-unstyled components">
             <li <?php echo esPaginaActiva('/escritorio.php') ? 'class="active"' : ''; ?>>
-                <a href="#">
+                <a href="../../frontend/sisvis/escritorio.php">
                     <span class="icon">🏠</span>
                     <span class="text">Inicio</span>
                 </a>
@@ -35,10 +35,10 @@ function obtenerPrimerNombre($nombre_completo)
                     <span class="text">Usuarios</span>
                 </a>
             </li>
-            <li <?php echo esPaginaActiva('/reportes.php') ? 'class="active"' : ''; ?>>
-                <a href="#">
+            <li <?php echo esPaginaActiva('../../frontend/empa/registrar_empa.php') ? 'class="active"' : ''; ?>>
+                <a href="../../frontend/empa/registrar_empa.php">
                     <span class="icon">📊</span>
-                    <span class="text">Reportes</span>
+                    <span class="text">Empadronamiento</span>
                 </a>
             </li>
             <li <?php echo esPaginaActiva('/config.php') ? 'class="active"' : ''; ?>>
