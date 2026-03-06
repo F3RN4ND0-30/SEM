@@ -3,42 +3,54 @@ session_start();
 require_once '../db/conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     $correo = trim($_POST['correo'] ?? '');
     $pass = $_POST['pass'] ?? '';
 
     if (empty($correo) || empty($pass)) {
-        die("❌ Por favor completa todos los campos.");
+        header("Location: ../../login.php?error=campos");
+        exit;
     }
 
-    // Validar formato de correo
     if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-        die("❌ Correo no válido.");
+        header("Location: ../../login.php?error=correo");
+        exit;
     }
 
-    // Buscar usuario por correo
-    $stmt = $pdo->prepare("SELECT IdUsuario, Nombres, Ape_Pat, Ape_Mat, Correo, Pass, IdTipoUsuario, Estado FROM usuarios WHERE Correo = :correo");
+    $stmt = $pdo->prepare("
+        SELECT IdUsuario, Nombres, Ape_Pat, Ape_Mat, Correo, Pass, IdTipoUsuario, Estado 
+        FROM usuarios 
+        WHERE Correo = :correo
+    ");
+
     $stmt->execute(['correo' => $correo]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
-        die("❌ Usuario no encontrado.");
+        header("Location: ../../login.php?error=usuario");
+        exit;
     }
 
-    // Verificar contraseña
     if (!password_verify($pass, $user['Pass'])) {
-        die("❌ Contraseña incorrecta.");
+        header("Location: ../../login.php?error=pass");
+        exit;
     }
 
     if ($user['Estado'] != 1) {
-        die("❌ Usuario inactivo.");
+        header("Location: ../../login.php?error=inactivo");
+        exit;
     }
 
-    // Guardar datos del usuario en sesión
+    // seguridad
+    session_regenerate_id(true);
+
+    // guardar sesión
     $_SESSION['user_id'] = $user['IdUsuario'];
     $_SESSION['user_name'] = $user['Nombres'] . ' ' . $user['Ape_Pat'] . ' ' . $user['Ape_Mat'];
     $_SESSION['user_type'] = $user['IdTipoUsuario'];
+    $_SESSION['user_email'] = $user['Correo'];
+    $_SESSION['login_time'] = time();
 
-    // Redirigir al escritorio
     header("Location: ../../frontend/sisvis/escritorio.php");
     exit;
 }

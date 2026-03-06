@@ -1,3 +1,7 @@
+<?php
+require_once "../../frontend/auth.php";
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
