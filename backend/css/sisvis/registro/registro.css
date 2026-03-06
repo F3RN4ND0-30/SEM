@@ -1,0 +1,284 @@
+/* backend/css/sisvis/registro/registro.css */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Barlow', sans-serif;
+    background: #f5f0eb;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        -55deg,
+        transparent,
+        transparent 40px,
+        rgba(200,16,46,0.03) 40px,
+        rgba(200,16,46,0.03) 41px
+    );
+    pointer-events: none;
+}
+
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    display: flex;
+}
+.top-bar div:nth-child(1) { background: #C8102E; flex: 1; }
+.top-bar div:nth-child(2) { background: #f5f0eb; flex: 1; }
+.top-bar div:nth-child(3) { background: #C8102E; flex: 1; }
+
+.wrapper {
+    width: 100%;
+    max-width: 450px;
+    animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.brand-flag {
+    display: flex;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    height: 26px;
+}
+.brand-flag div { width: 10px; }
+.brand-flag div:nth-child(1),
+.brand-flag div:nth-child(3) { background: #C8102E; }
+.brand-flag div:nth-child(2) { background: white; }
+
+.brand-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #1a3a6b;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 36px 32px 32px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    border-top: 3px solid #C8102E;
+}
+
+.card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: #1a1a2e;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    margin-bottom: 4px;
+    text-align: center;
+}
+.card-title span { color: #C8102E; }
+
+.card-sub {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 26px;
+    text-align: center;
+}
+
+.mensaje {
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.mensaje.exito {
+    background-color: #e6f7e6;
+    color: #2e7d32;
+    border: 1px solid #a5d6a5;
+}
+
+.mensaje.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.field {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1a3a6b;
+    margin-bottom: 7px;
+}
+
+.input-wrap {
+    position: relative;
+}
+
+.icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+input, select {
+    width: 100%;
+    background: #fafafa;
+    border: 1.5px solid #ececec;
+    border-radius: 10px;
+    padding: 11px 13px 11px 38px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: #1a1a2e;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+input:focus, select:focus {
+    border-color: #C8102E;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(200,16,46,0.08);
+}
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ccc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+    background-size: 14px;
+}
+
+.toggle-btn {
+    position: absolute;
+    right: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.toggle-btn:hover {
+    color: #888;
+}
+
+.btn {
+    width: 100%;
+    padding: 13px;
+    background: #C8102E;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(200,16,46,0.28);
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background: #a50d25;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(200,16,46,0.38);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.foot-note {
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+    margin-top: 20px;
+}
+
+.foot-note a {
+    color: #C8102E;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.foot-note a:hover {
+    text-decoration: underline;
+}
+
+.status-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 18px;
+    font-size: 11px;
+    color: #bbb;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: #271919;
+    margin-bottom: 22px;
+}

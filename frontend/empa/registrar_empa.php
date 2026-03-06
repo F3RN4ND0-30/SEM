@@ -27,6 +27,7 @@ $anioActual = date('Y');
 
 <body>
     <?php include "../navbar/navbar.php"; ?>
+    
     <div class="form-container">
         <h2>Registrar Empadronamiento</h2>
         <form action="../../backend/php/empa/guardar_empa.php" method="POST">
