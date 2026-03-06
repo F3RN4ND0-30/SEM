@@ -295,7 +295,7 @@
         <label class="remember">
           <input type="checkbox" name="recordar"/> Recordarme
         </label>
-        <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
+        <a href="#" class="forgot"></a>
       </div>
 
       <button type="submit" class="btn">
@@ -306,7 +306,7 @@
     </form>
 
     <div class="foot-note">
-      ¿No tienes cuenta? <a href="#">Regístrate aquí</a>
+      ¿No tienes cuenta? <a href="registro.php">Regístrate aquí</a>
     </div>
   </div>
 
