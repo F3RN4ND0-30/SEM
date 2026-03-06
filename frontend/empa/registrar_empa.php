@@ -14,6 +14,7 @@ $anioActual = date('Y');
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Registrar Empadronamiento</title>
     <link rel="stylesheet" href="../../backend/css/navbar/navbar.css" />
     <link rel="stylesheet" href="../../backend/css/empa/registrar_empa.css" />

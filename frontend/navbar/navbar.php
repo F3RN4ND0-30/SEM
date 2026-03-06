@@ -36,6 +36,12 @@ function obtenerPrimerNombre($nombre_completo)
                 </a>
             </li>
             <li <?php echo esPaginaActiva('../../frontend/empa/registrar_empa.php') ? 'class="active"' : ''; ?>>
+                <a href="../../frontend/empa/listar_empa.php">
+                    <span class="icon">📊</span>
+                    <span class="text">listado</span>
+                </a>
+            </li>
+            <li <?php echo esPaginaActiva('../../frontend/empa/registrar_empa.php') ? 'class="active"' : ''; ?>>
                 <a href="../../frontend/empa/registrar_empa.php">
                     <span class="icon">📊</span>
                     <span class="text">Empadronamiento</span>
