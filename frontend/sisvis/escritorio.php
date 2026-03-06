@@ -59,6 +59,9 @@ $usuariosActivos = (int)$stmtUsers->fetchColumn();
 
 <body>
 
+    <!-- ══ OVERLAY MOBILE ══ -->
+    <div class="body-overlay"></div>
+
     <!-- ══ NAVBAR ══ -->
     <?php include "../navbar/navbar.php"; ?>
 
@@ -241,6 +244,31 @@ $usuariosActivos = (int)$stmtUsers->fetchColumn();
                     countUp(el, parseInt(el.dataset.count));
                 });
             }, 400);
+        });
+        // Sidebar toggle
+        const sidebar  = document.querySelector('.sidebar');
+        const main     = document.querySelector('.main');
+        const overlay  = document.querySelector('.body-overlay');
+        const isMobile = () => window.innerWidth <= 768;
+
+        document.getElementById('sidebarCollapse').addEventListener('click', () => {
+            if (isMobile()) {
+                sidebar.classList.toggle('mobile-active');
+                overlay.classList.toggle('active');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                main.classList.toggle('collapsed');
+            }
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('mobile-active');
+            overlay.classList.remove('active');
+        });
+        window.addEventListener('resize', () => {
+            if (!isMobile()) {
+                sidebar.classList.remove('mobile-active');
+                overlay.classList.remove('active');
+            }
         });
     </script>
 

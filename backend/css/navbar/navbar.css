@@ -43,8 +43,84 @@ body {
     padding: 28px 16px;
     gap: 6px;
     flex-shrink: 0;
-    position: relative;
-    z-index: 10;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    z-index: 1050;
+    transition: width 0.3s ease, transform 0.3s ease;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.sidebar .logo,
+.sidebar .nav-label,
+.sidebar .logo-text,
+.sidebar .nav-item span {
+    white-space: nowrap;
+}
+
+/* ── MAIN ajuste con sidebar fixed ── */
+.main {
+    margin-left: var(--sidebar-w);
+    transition: margin-left 0.3s ease;
+}
+.main.collapsed {
+    margin-left: 60px;
+}
+
+/* ── OVERLAY MOBILE ── */
+.body-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+    z-index: 1040;
+}
+.body-overlay.active { opacity: 1; visibility: visible; }
+
+/* ── TOPBAR toggle button ── */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.topbar-toggle {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+.topbar-toggle:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.mobile-active { transform: translateX(0); }
+    .body-overlay { display: block; }
+    .main, .main.collapsed { margin-left: 0; }
+    .topbar { padding: 14px 16px; }
+    .content { padding: 16px; }
 }
 
 .sidebar::after {
@@ -185,18 +261,7 @@ body {
     overflow-x: hidden;
 }
 
-/* ── TOPBAR ── */
-.topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 32px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    position: sticky;
-    top: 0;
-    z-index: 5;
-}
+/* ── TOPBAR title y right ── */
 
 .topbar-title {
     font-family: 'Nunito', sans-serif;
