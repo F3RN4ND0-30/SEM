@@ -1,0 +1,255 @@
+/* navbar.css */
+
+/* Variables de color */
+:root {
+    --primary-color: #c8102e;
+    --primary-hover: #a30b26;
+    --sidebar-bg: #faf7f5;
+    --text-color: #222;
+    --text-muted: #666;
+    --shadow: rgba(0, 0, 0, 0.12);
+    --logout-color: #c85100;
+}
+
+/* Reset y estilos básicos */
+body {
+    margin: 0;
+    font-family: 'Barlow', sans-serif;
+    background: #f5f0eb;
+    color: var(--text-color);
+}
+
+/* Wrapper que contiene sidebar y overlay */
+.wrapper {
+    position: relative;
+}
+
+/* Sidebar */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: var(--sidebar-bg);
+    box-shadow: 2px 0 10px var(--shadow);
+    padding: 20px 0;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#sidebar {
+    transform: translateX(0);
+}
+
+#sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+#sidebarCollapse {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1200;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+#sidebarCollapse:hover {
+    background: var(--primary-hover);
+}
+
+#sidebar:not(.collapsed)~#sidebarCollapse {
+    left: 235px;
+}
+
+.sidebar-menu {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1200;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    background: var(--primary-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: white;
+}
+
+
+/* botón */
+.sidebar-menu .btn-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+/* texto */
+.sidebar-menu span {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Header del sidebar */
+.sidebar-header {
+    margin-top: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    margin-bottom: 35px;
+}
+
+.sidebar-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 900;
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.sidebar-header img {
+    height: 48px;
+    width: auto;
+    border-radius: 8px;
+}
+
+/* Botón toggle menú */
+.btn-toggle {
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.btn-toggle:hover {
+    color: var(--primary-hover);
+}
+
+/* Lista de navegación */
+#sidebar .components {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+#sidebar .components li {
+    margin: 0;
+}
+
+#sidebar .components li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 30px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 1rem;
+    border-left: 4px solid transparent;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+    border-radius: 0 20px 20px 0;
+}
+
+#sidebar .components li a:hover,
+#sidebar .components li.active>a {
+    background-color: var(--primary-color);
+    color: white;
+    border-left-color: white;
+}
+
+/* Iconos en menú */
+#sidebar .components li a .icon {
+    font-size: 1.3rem;
+}
+
+/* Texto menú */
+#sidebar .components li a .text {
+    white-space: nowrap;
+}
+
+/* Logout */
+.logout {
+    padding: 20px 30px;
+    border-top: 1px solid #ddd;
+}
+
+.logout a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--logout-color);
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.logout a:hover {
+    color: var(--primary-hover);
+}
+
+/* Icono logout */
+.logout a .icon {
+    font-size: 1.4rem;
+}
+
+/* Body overlay (para móviles) */
+.body-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 1040;
+}
+
+.body-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Scrollbar personalizado para sidebar */
+#sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #sidebar {
+        transform: translateX(-100%);
+    }
+
+    #sidebar.show {
+        transform: translateX(0);
+    }
+}
