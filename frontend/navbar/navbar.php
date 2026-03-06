@@ -17,7 +17,7 @@ function obtenerPrimerNombre($nombre_completo)
     <nav id="sidebar">
         <div class="sidebar-header">
             <h3>
-                <img src="/sisti/backend/img/logoPisco.png" class="img-fluid" alt="Logo" />
+                <img src="../../backend/img/logoPisco.png" class="img-fluid" alt="Logo" />
                 <span class="sidebar-text">SEM</span>
             </h3>
         </div>

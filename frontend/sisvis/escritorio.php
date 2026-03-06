@@ -12,6 +12,7 @@ require_once "../../frontend/auth.php";
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../../backend/css/navbar/navbar.css" />
     <link rel="stylesheet" href="../../backend/css/sisvis/escritorio.css" />
+    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 </head>
 
 <body>

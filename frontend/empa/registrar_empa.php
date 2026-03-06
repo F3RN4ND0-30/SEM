@@ -20,6 +20,8 @@ $anioActual = date('Y');
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 </head>
 
 <body>
@@ -53,12 +55,12 @@ $anioActual = date('Y');
             <!-- Formatos y fechas -->
             <div class="form-group">
                 <label>Formato D100</label>
-                <input type="number" name="d100" required>
+                <input type="number" name="d100" required maxlength="7" pattern="\d{1,7}" title="Máximo 7 números">
             </div>
 
             <div class="form-group">
                 <label>S100</label>
-                <input type="number" name="s100" required>
+                <input type="number" name="s100" required maxlength="8" pattern="\d{1,8}" title="Máximo 8 números">
             </div>
 
             <div class="form-group">
@@ -68,7 +70,7 @@ $anioActual = date('Y');
 
             <div class="form-group">
                 <label>FSU</label>
-                <input type="number" name="fsu" required>
+                <input type="number" name="fsu" required maxlength="8" pattern="\d{1,8}" title="Máximo 8 números">
             </div>
 
             <div class="form-group">
@@ -159,6 +161,60 @@ $anioActual = date('Y');
     <script>
         flatpickr(".datepicker", {
             dateFormat: "Y-m-d"
+        });
+
+        document.querySelector('input[name="d100"]').addEventListener('input', function() {
+            if (this.value.length > 7) this.value = this.value.slice(0, 7);
+        });
+        document.querySelector('input[name="s100"]').addEventListener('input', function() {
+            if (this.value.length > 8) this.value = this.value.slice(0, 8);
+        });
+        document.querySelector('input[name="fsu"]').addEventListener('input', function() {
+            if (this.value.length > 8) this.value = this.value.slice(0, 8);
+        });
+        document.querySelector('input[name="dni_solicitante"]').addEventListener('input', function() {
+            if (this.value.length > 8) this.value = this.value.slice(0, 8);
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dniInput = document.querySelector('input[name="dni_solicitante"]');
+            const nombreInput = document.querySelector('input[name="nombre_solicitante"]');
+
+            dniInput.addEventListener('input', function() {
+                const dni = dniInput.value.trim();
+
+                if (dni.length === 8 && /^\d{8}$/.test(dni)) {
+                    fetch('../../backend/php/api/api_reniec.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                numdni: dni
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                // Concatenar y limpiar espacios extras
+                                let fullName = `${data.prenombres} ${data.apPrimer} ${data.apSegundo}`;
+                                fullName = fullName.replace(/\s+/g, ' ').trim();
+                                nombreInput.value = fullName;
+                                nombreInput.focus();
+                            } else {
+                                alert(data.message || 'No se pudo obtener el nombre del DNI');
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Error al consultar RENIEC');
+                        });
+                } else {
+                    nombreInput.value = '';
+                }
+            });
         });
     </script>
 
