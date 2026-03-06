@@ -32,7 +32,7 @@
         Empadronamiento
     </a>
 
-    <a class="nav-item <?php echo ($currentPage == 'listado_empa.php') ? 'active' : ''; ?>" href="../empa/listado_empa.php">
+    <a class="nav-item <?php echo ($currentPage == 'listado_empa.php') ? 'active' : ''; ?>" href="../empa/listar_empa.php">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="8" y1="6" x2="21" y2="6" />
             <line x1="8" y1="12" x2="21" y2="12" />
