@@ -43,31 +43,38 @@ if (isset($_POST['registrar'])) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario - SEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../backend/css/sisvis/registro/registro.css"> <!-- ✅ ruta corregida -->
+    <link rel="stylesheet" href="../../backend/css/sisvis/registro/registro.css">
+    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 </head>
+
 <body>
 
     <div class="top-bar">
-        <div></div><div></div><div></div>
+        <div></div>
+        <div></div>
+        <div></div>
     </div>
 
     <div class="wrapper">
         <div class="brand">
             <div class="brand-flag">
-                <div></div><div></div><div></div>
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
-            <span class="brand-name">Sistema Nacional</span>
+            <span class="brand-name">Sistema Municipal</span>
         </div>
 
         <div class="card">
             <div class="card-title">Registro de <span>Usuario</span></div>
             <div class="card-sub">Completa todos los campos para registrarte</div>
-            <hr/>
+            <hr />
 
             <?php if ($mensaje != ""): ?>
                 <div class="mensaje <?php echo $tipo_mensaje; ?>">
@@ -82,13 +89,13 @@ if (isset($_POST['registrar'])) {
                     <div class="input-wrap">
                         <span class="icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                <line x1="9" y1="9" x2="15" y2="15"/>
-                                <line x1="15" y1="9" x2="9" y2="15"/>
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <line x1="9" y1="9" x2="15" y2="15" />
+                                <line x1="15" y1="9" x2="9" y2="15" />
                             </svg>
                         </span>
                         <input type="text" id="dni" name="dni" placeholder="12345678" maxlength="8"
-                               value="<?php echo isset($form_data['dni']) ? htmlspecialchars($form_data['dni']) : ''; ?>" required>
+                            value="<?php echo isset($form_data['dni']) ? htmlspecialchars($form_data['dni']) : ''; ?>" required>
                     </div>
                 </div>
 
@@ -97,12 +104,12 @@ if (isset($_POST['registrar'])) {
                     <div class="input-wrap">
                         <span class="icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
                             </svg>
                         </span>
                         <input type="text" id="nombres" name="nombres" placeholder="Juan Carlos"
-                               value="<?php echo isset($form_data['nombres']) ? htmlspecialchars($form_data['nombres']) : ''; ?>" required>
+                            value="<?php echo isset($form_data['nombres']) ? htmlspecialchars($form_data['nombres']) : ''; ?>" required>
                     </div>
                 </div>
 
@@ -111,12 +118,12 @@ if (isset($_POST['registrar'])) {
                     <div class="input-wrap">
                         <span class="icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
                             </svg>
                         </span>
                         <input type="text" id="apellidos" name="apellidos" placeholder="Pérez García"
-                               value="<?php echo isset($form_data['apellidos']) ? htmlspecialchars($form_data['apellidos']) : ''; ?>" required>
+                            value="<?php echo isset($form_data['apellidos']) ? htmlspecialchars($form_data['apellidos']) : ''; ?>" required>
                     </div>
                 </div>
 
@@ -125,12 +132,12 @@ if (isset($_POST['registrar'])) {
                     <div class="input-wrap">
                         <span class="icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                <polyline points="22,6 12,13 2,6"/>
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
                             </svg>
                         </span>
                         <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com"
-                               value="<?php echo isset($form_data['correo']) ? htmlspecialchars($form_data['correo']) : ''; ?>" required>
+                            value="<?php echo isset($form_data['correo']) ? htmlspecialchars($form_data['correo']) : ''; ?>" required>
                     </div>
                 </div>
 
@@ -139,14 +146,14 @@ if (isset($_POST['registrar'])) {
                     <div class="input-wrap">
                         <span class="icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/>
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" />
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                             </svg>
                         </span>
                         <select id="tipo" name="tipo" required>
                             <option value="">Seleccione tipo de cuenta</option>
                             <option value="Administrador" <?php echo (isset($form_data['tipo']) && $form_data['tipo'] == 'Administrador') ? 'selected' : ''; ?>>Administrador</option>
-                            <option value="Empadronador"  <?php echo (isset($form_data['tipo']) && $form_data['tipo'] == 'Empadronador')  ? 'selected' : ''; ?>>Empadronador</option>
+                            <option value="Empadronador" <?php echo (isset($form_data['tipo']) && $form_data['tipo'] == 'Empadronador')  ? 'selected' : ''; ?>>Empadronador</option>
                         </select>
                     </div>
                 </div>
@@ -156,15 +163,15 @@ if (isset($_POST['registrar'])) {
                     <div class="input-wrap">
                         <span class="icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2"/>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                             </svg>
                         </span>
                         <input type="password" id="contrasena" name="contrasena" placeholder="•••••••• (mínimo 6 caracteres)" required>
                         <button type="button" class="toggle-btn" onclick="togglePassword('contrasena', this)">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
                             </svg>
                         </button>
                     </div>
@@ -175,15 +182,15 @@ if (isset($_POST['registrar'])) {
                     <div class="input-wrap">
                         <span class="icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2"/>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                             </svg>
                         </span>
                         <input type="password" id="confirmar" name="confirmar" placeholder="••••••••" required>
                         <button type="button" class="toggle-btn" onclick="togglePassword('confirmar', this)">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
                             </svg>
                         </button>
                     </div>
@@ -192,15 +199,11 @@ if (isset($_POST['registrar'])) {
                 <button type="submit" name="registrar" class="btn">
                     Registrar Usuario
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                        <polyline points="12 5 19 12 12 19"/>
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
                     </svg>
                 </button>
             </form>
-
-            <div class="foot-note">
-                ¿Ya tienes una cuenta? <a href="../../frontend/login.php">Inicia sesión aquí</a> <!-- ✅ ruta corregida -->
-            </div>
         </div>
 
         <div class="status-row">
@@ -213,11 +216,75 @@ if (isset($_POST['registrar'])) {
             const input = document.getElementById(id);
             const isPass = input.type === 'password';
             input.type = isPass ? 'text' : 'password';
-            btn.querySelector('svg').innerHTML = isPass
-                ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`
-                : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+            btn.querySelector('svg').innerHTML = isPass ?
+                `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>` :
+                `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
         }
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dniInput = document.getElementById('dni');
+            const nombresInput = document.getElementById('nombres');
+            const apellidosInput = document.getElementById('apellidos');
+            const correoInput = document.getElementById('correo');
+
+            dniInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    buscarReniec();
+                }
+            });
+
+            dniInput.addEventListener('blur', buscarReniec);
+
+            function buscarReniec() {
+                const dni = dniInput.value.trim();
+                if (dni.length !== 8 || isNaN(dni)) return;
+
+                fetch('../../backend/php/api/api_reniec.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            numdni: dni
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Concatenar y limpiar nombres completos
+                            let fullName = `${data.prenombres}`;
+                            fullName = fullName.replace(/\s+/g, ' ').trim();
+                            nombresInput.value = fullName;
+                            nombresInput.focus();
+
+                            // Apellidos separados
+                            let lastNames = `${data.apPrimer} ${data.apSegundo}`;
+                            lastNames = lastNames.replace(/\s+/g, ' ').trim();
+                            apellidosInput.value = lastNames;
+
+                            // Autocompletar correo solo si está vacío o no tiene '@'
+                            if (!correoInput.value.includes('@')) {
+                                const primerNombre = data.prenombres.split(' ')[0];
+                                const primerApellido = data.apPrimer.split(' ')[0];
+                                const correoGenerado = (primerNombre[0] + primerApellido).toLowerCase().replace(/\s+/g, '');
+                                correoInput.value = correoGenerado + '@sem.gob.pe';
+                            }
+
+                        } else {
+                            nombresInput.value = '';
+                            apellidosInput.value = '';
+                            correoInput.value = '';
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error al consultar RENIEC:', err);
+                    });
+            }
+        });
+    </script>
 </body>
+
 </html>

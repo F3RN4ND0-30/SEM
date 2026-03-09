@@ -55,7 +55,7 @@
         Reportes
     </a>
 
-    <a class="nav-item <?php echo ($currentPage == 'usuarios.php') ? 'active' : ''; ?>" href="usuarios.php">
+    <a class="nav-item <?php echo ($currentPage == 'usuarios.php') ? 'active' : ''; ?>" href="../registro/registro.php">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="7" r="4" />
             <path d="M17 11v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6" />
