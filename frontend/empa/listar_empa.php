@@ -12,6 +12,7 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
     <title>Listado de Empadronamientos</title>
     <link rel="stylesheet" href="../../backend/css/navbar/navbar.css" />
     <link rel="stylesheet" href="../../backend/css/empa/listar_empa.css" />
+    <link rel="stylesheet" href="../../backend/css/empa/modal_empa.css" />
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -54,6 +55,9 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
                     <th>Final CSE</th>
                     <th>Empadronador</th>
                     <th>Observaciones</th>
+                    <?php if ($_SESSION['user_type'] == 1): ?>
+                        <th>Acciones</th>
+                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody>
@@ -79,12 +83,74 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
                         <td><?= $e['FinalCSE'] ?></td>
                         <td><?= $e['Empadronador'] ?></td>
                         <td><?= $e['Observaciones'] ?></td>
+                        <?php if ($_SESSION['user_type'] == 1): ?>
+                            <td>
+                                <button class="btn-editar" data-id="<?= $e['IdEmpa'] ?>">
+                                    ✏️ Editar
+                                </button>
+                            </td>
+                        <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
+
+    <!-- MODAL DE EDICIÓN -->
+    <div id="modalEditar" class="modal">
+        <div class="modal-contenido">
+
+            <span class="cerrar">&times;</span>
+            <h3>Editar Empadronamiento</h3>
+
+            <form id="formEditar">
+
+                <input type="hidden" name="id" id="edit_id">
+
+                <label>Tipo Solicitud</label>
+                <input type="text" name="tipo_solicitud" id="edit_tipo_soli">
+
+                <label>Tipo Remisión</label>
+                <input type="text" name="tipo_remision" id="edit_tipo_remi">
+
+                <label>DNI</label>
+                <input type="number" name="dni_solicitante" id="edit_dni">
+
+                <label>Solicitante</label>
+                <input type="text" name="nombre_solicitante" id="edit_solicitante">
+
+                <label>Integrantes</label>
+                <input type="number" name="num_integrantes" id="edit_integrantes">
+
+                <label>Archivador</label>
+                <input type="number" name="num_archivador" id="edit_archivador">
+
+                <label>Año</label>
+                <input type="number" name="anio" id="edit_anio">
+
+                <label>Tipo CSE</label>
+                <select name="tipo_cse" id="edit_tipo_cse">
+                    <option>NO POBRE</option>
+                    <option>POBRE</option>
+                    <option>POBRE EXTREMO</option>
+                </select>
+
+                <label>Empadronador</label>
+                <input type="text" name="empadronador" id="edit_empadronador">
+
+                <label>Observaciones</label>
+                <textarea name="observaciones" id="edit_observaciones"></textarea>
+
+                <br>
+
+                <button type="submit">Guardar cambios</button>
+
+            </form>
+
+        </div>
+    </div>
 </body>
+
 <script>
     $(document).ready(function() {
         $('#empadronamientos').DataTable({
@@ -100,7 +166,71 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
         });
     });
 </script>
-<!-- script para el navbar -->
+
+<!-- SCRIPT PARA EL MODAL -->
+<script>
+    $(document).on("click", ".btn-editar", function() {
+
+        let id = $(this).data("id");
+
+        $("#modalEditar").show();
+
+        $.ajax({
+            url: "../../backend/php/empa/obtener_empa.php",
+            type: "GET",
+            data: {
+                id: id
+            },
+            dataType: "json",
+            success: function(data) {
+
+                $("#edit_id").val(data.IdEmpa);
+                $("#edit_tipo_soli").val(data.IdTipoSoli);
+                $("#edit_tipo_remi").val(data.IdTipoRemi);
+                $("#edit_dni").val(data.DNI_Soli);
+                $("#edit_solicitante").val(data.Solicitante);
+                $("#edit_integrantes").val(data.Integrantes);
+                $("#edit_archivador").val(data.Archivador);
+                $("#edit_anio").val(data.AÑO);
+                $("#edit_tipo_cse").val(data.TipoCSE);
+                $("#edit_empadronador").val(data.Empadronador);
+                $("#edit_observaciones").val(data.Observaciones);
+
+            }
+        });
+
+    });
+</script>
+<script>
+    $(".cerrar").click(function() {
+        $("#modalEditar").hide();
+    });
+</script>
+<script>
+    $("#formEditar").submit(function(e) {
+
+        e.preventDefault();
+
+        $.ajax({
+            url: "../../backend/php/empa/actualizar_empa.php",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function() {
+
+                alert("Registro actualizado correctamente");
+
+                $("#modalEditar").hide();
+
+                location.reload();
+
+            }
+
+        });
+
+    });
+</script>
+
+<!-- SCRIPT PARA EL NAVBAR -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const sidebar = document.getElementById('sidebar');
