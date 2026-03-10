@@ -16,13 +16,132 @@ $anioActual = date('Y');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Registrar Empadronamiento</title>
-    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css" />
     <link rel="stylesheet" href="../../backend/css/empa/registrar_empa.css" />
+    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css" />
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <style>
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 32px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .topbar-title {
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .topbar-title span {
+            color: var(--accent);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(200, 16, 46, 0.12);
+            color: #ff6b81;
+            letter-spacing: .04em;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px 6px 6px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #1a3a6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Ocultar sidebar en móviles por defecto */
+        @media (max-width: 768px) {
+
+            /* Overlay solo cubre el contenido, no la topbar ni el toggle */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                /* debajo del toggle */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+                pointer-events: all;
+                /* sí bloquea el contenido debajo */
+            }
+
+            /* Cuando esté activo */
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar encima del overlay */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: var(--sidebar-w);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1005;
+                /* encima del overlay */
+            }
+
+            /* Toggle siempre encima de todo */
+            .topbar-toggle {
+                z-index: 1010;
+                /* encima de sidebar y overlay */
+                position: relative;
+                /* relativo dentro de la topbar */
+            }
+        }
+
+        /* En escritorio, ocultar botón toggle */
+        @media (min-width: 769px) {
+            .topbar-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -32,6 +151,7 @@ $anioActual = date('Y');
 
         <!-- TOPBAR -->
         <header class="topbar">
+            <button id="toggleSidebar" class="topbar-toggle">☰</button>
             <div class="topbar-title">Registro de <span>Empadronamiento</span></div>
             <div class="topbar-right">
                 <span class="badge-tag">En vivo</span>
@@ -188,6 +308,8 @@ $anioActual = date('Y');
             </form>
         </div>
     </div>
+
+    <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
 
     <script>
         flatpickr(".datepicker", {

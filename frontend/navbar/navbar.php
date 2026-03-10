@@ -6,7 +6,7 @@ $userName     = $_SESSION['user_name']  ?? 'Usuario';
 $userInitial  = strtoupper(substr($userName, 0, 1));
 $userType     = $_SESSION['user_type']  ?? '';
 ?>
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
     <!-- Logo -->
     <div class="logo">
         <div class="logo-flag">

@@ -30,7 +30,7 @@ body {
     color: var(--text);
     min-height: 100vh;
     display: flex;
-    overflow: hidden;
+    overflow: auto;
 }
 
 /* ── SIDEBAR ── */
@@ -747,4 +747,344 @@ body {
 ::-webkit-scrollbar-thumb {
     background: var(--surface2);
     border-radius: 4px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* TOPBAR RESPONSIVO */
+@media (max-width: 768px) {
+    .topbar {
+        flex-wrap: wrap;
+        /* permite que los elementos bajen de línea */
+        padding: 12px 16px;
+        row-gap: 8px;
+        /* espacio vertical entre filas */
+    }
+
+    /* Fila 1: botón toggle y título */
+
+    /* El botón va a la izquierda en fila 1 */
+    .topbar-toggle {
+        order: 1;
+        flex: 0 0 auto;
+        align-self: flex-start;
+    }
+
+    /* Título a la derecha en fila 1 */
+    .topbar-title {
+        margin-top: 10px;
+        order: 2;
+        flex: 1 1 auto;
+        text-align: right;
+        align-self: flex-start;
+        font-size: 16px;
+    }
+
+    /* Fila 2: badge a la izquierda, user-chip a la derecha */
+    .topbar-right {
+        order: 3;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 4px;
+        gap: 0;
+    }
+
+    /* Badge a la izquierda */
+    .badge-tag {
+        font-size: 10px;
+        padding: 2px 8px;
+        white-space: nowrap;
+    }
+
+    /* User-chip a la derecha */
+    .user-chip {
+        font-size: 11px;
+        padding: 4px 10px 4px 6px;
+        gap: 6px;
+        white-space: nowrap;
+    }
+
+    .user-avatar {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+    }
+
+    /* BOTÓN TOGGLE DEL SIDEBAR */
+    .topbar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--accent);
+        color: #fff;
+        font-size: 1.4rem;
+        border: none;
+        border-radius: 6px;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        z-index: 1010;
+        flex-shrink: 0;
+        /* siempre encima del sidebar */
+    }
+}
+
+/* SIDEBAR RESPONSIVO */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        /* que quede encima del contenido */
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: var(--sidebar-w);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1005;
+        /* por encima de la topbar */
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0 !important;
+    }
+
+    /* BOTÓN TOGGLE */
+    .topbar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--accent);
+        color: #fff;
+        font-size: 1.4rem;
+        border: none;
+        border-radius: 6px;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        z-index: 1010;
+        /* por encima del sidebar */
+        position: relative;
+        /* o fixed si quieres que se mueva con scroll */
+    }
+}
+
+/* Desktop: ocultar botón */
+@media (min-width: 769px) {
+    .topbar-toggle {
+        display: none;
+    }
+}
+
+/* Overlay opcional */
+.sidebar-overlay {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@media (max-width: 1024px) {
+
+    /* GRID: cambia el layout de dos columnas a una sola columna */
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    /* Sidebar: hacer que se pueda ocultar y que no ocupe espacio fijo */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 100;
+        width: var(--sidebar-w);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Cuando esté activo el sidebar, que se muestre */
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    /* Main toma todo el ancho */
+    .main {
+        margin-left: 0;
+        overflow-y: auto;
+        flex: 1 1 auto;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Ajustar padding del contenido */
+    .content {
+        padding: 16px;
+    }
+
+    /* Stat chips: que se acomoden en columnas o en scroll horizontal */
+    .stat-chips {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 12px;
+        padding-bottom: 8px;
+    }
+
+    .stat-chips::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .stat-chips::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 3px;
+    }
+
+    /* Reducir tamaño de chips */
+    .chip {
+        min-width: 140px;
+        padding: 20px 16px 18px;
+    }
+
+    .chip-value {
+        font-size: 36px;
+    }
+
+    /* Panel: ajustar padding */
+    .panel {
+        padding: 20px;
+    }
+
+    /* Panel header: stack vertical */
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    /* Panel title y sub alineados a la izquierda */
+    .panel-title {
+        font-size: 14px;
+    }
+
+    .panel-sub {
+        font-size: 11px;
+    }
+
+    /* Bar rows: stack vertical para que no queden tan apretados */
+    .bar-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .bar-info {
+        flex: 1 1 150px;
+        width: 100%;
+    }
+
+    .bar-track {
+        flex: 1 1 auto;
+        height: 14px;
+        background: var(--surface2);
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+    }
+
+    .bar-stats {
+        display: flex;
+        justify-content: space-between;
+        width: 90px;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        width: 100%;
+    }
+
+    .bar-pct {
+        color: var(--accent);
+    }
+
+    .bar-count {
+        /* color inline según porcentaje */
+    }
+
+    /* Right column: que ocupe toda la anchura y no se queden pegados */
+    .right-col {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .stat-card {
+        flex: 1 1 45%;
+        max-width: 320px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Topbar title más pequeño */
+    .topbar-title {
+        font-size: 14px;
+    }
+
+    /* Sidebar: aún más pequeña */
+    .sidebar {
+        width: 180px;
+    }
+
+    /* Stat chips: tamaño aún más reducido */
+    .chip {
+        min-width: 120px;
+        padding: 16px 12px 14px;
+    }
+
+    .chip-value {
+        font-size: 28px;
+    }
+
+    /* Right column: tarjetas ocupan 100% */
+    .stat-card {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    /* Bar row: que el texto y barra no se rompan */
+    .bar-row {
+        gap: 4px;
+    }
+
+    .bar-pct {
+        font-size: 18px;
+    }
 }

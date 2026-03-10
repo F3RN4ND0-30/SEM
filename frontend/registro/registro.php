@@ -34,6 +34,62 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="../../backend/css/sisvis/registro/modales.css" />
 
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <style>
+        /* Ocultar sidebar en móviles por defecto */
+        @media (max-width: 768px) {
+
+            /* Overlay solo cubre el contenido, no la topbar ni el toggle */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                /* debajo del toggle */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+                pointer-events: all;
+                /* sí bloquea el contenido debajo */
+            }
+
+            /* Cuando esté activo */
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar encima del overlay */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: var(--sidebar-w);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1005;
+                /* encima del overlay */
+            }
+
+            /* Toggle siempre encima de todo */
+            .topbar-toggle {
+                z-index: 1010;
+                /* encima de sidebar y overlay */
+                position: relative;
+                /* relativo dentro de la topbar */
+            }
+        }
+
+        /* En escritorio, ocultar botón toggle */
+        @media (min-width: 769px) {
+            .topbar-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -42,7 +98,8 @@ if (!isset($_SESSION['user_id'])) {
 
         <!-- TOPBAR -->
         <header class="topbar">
-            <div class="topbar-title">Gestión de <span>Usuarios</span></div>
+            <button id="toggleSidebar" class="topbar-toggle">☰</button>
+            <div class="topbar-title">Lista de <span>Empadronamiento</span></div>
             <div class="topbar-right">
                 <span class="badge-tag">En vivo</span>
                 <div class="user-chip">
@@ -238,6 +295,7 @@ if (!isset($_SESSION['user_id'])) {
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
     <script src="../../backend/js/usuarios/usuarios.js"></script>
 
     <script>

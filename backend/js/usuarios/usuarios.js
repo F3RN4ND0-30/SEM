@@ -52,7 +52,7 @@ $(document).ready(function () {
           </div>`,
             },
         ],
-        order: [[7, "desc"]],
+        order: [[0, "desc"]],
         responsive: true,
     });
 

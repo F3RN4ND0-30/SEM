@@ -24,7 +24,62 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <style>
+        /* Ocultar sidebar en móviles por defecto */
+        @media (max-width: 768px) {
 
+            /* Overlay solo cubre el contenido, no la topbar ni el toggle */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                /* debajo del toggle */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+                pointer-events: all;
+                /* sí bloquea el contenido debajo */
+            }
+
+            /* Cuando esté activo */
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar encima del overlay */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: var(--sidebar-w);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1005;
+                /* encima del overlay */
+            }
+
+            /* Toggle siempre encima de todo */
+            .topbar-toggle {
+                z-index: 1010;
+                /* encima de sidebar y overlay */
+                position: relative;
+                /* relativo dentro de la topbar */
+            }
+        }
+
+        /* En escritorio, ocultar botón toggle */
+        @media (min-width: 769px) {
+            .topbar-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -33,6 +88,7 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
 
         <!-- TOPBAR -->
         <header class="topbar">
+            <button id="toggleSidebar" class="topbar-toggle">☰</button>
             <div class="topbar-title">Lista de <span>Empadronamiento</span></div>
             <div class="topbar-right">
                 <span class="badge-tag">En vivo</span>
@@ -49,9 +105,9 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
                     <tr>
                         <th>ID</th>
                         <th>Tipo Solicitud</th>
-                        <th>Tipo Remisión</th>
-                        <th>Fecha</th>
+                        <th>Tipo Remisión</th>                        
                         <th>D100</th>
+                        <th>Fecha</th>
                         <th>S100</th>
                         <th>Fecha S100</th>
                         <th>FSU</th>
@@ -162,128 +218,131 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
             </div>
         </div>
     </div>
-</body>
 
-<script>
-    $(document).ready(function() {
-        $('#empadronamientos').DataTable({
-            responsive: true,
-            pageLength: 10,
-            lengthMenu: [5, 10, 25, 50],
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-            },
-            order: [
-                [0, 'desc']
-            ]
+
+    <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#empadronamientos').DataTable({
+                responsive: true,
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                },
+                order: [
+                    [0, 'desc']
+                ]
+            });
         });
-    });
-</script>
+    </script>
 
-<!-- SCRIPT PARA EL MODAL Y EDITAR REGISTRO -->
-<script>
-    // ABRIR MODAL Y CARGAR DATOS
-    $(document).on("click", ".btn-editar", function() {
-        let id = $(this).data("id");
-        const modal = $("#modalEditar");
+    <!-- SCRIPT PARA EL MODAL Y EDITAR REGISTRO -->
+    <script>
+        // ABRIR MODAL Y CARGAR DATOS
+        $(document).on("click", ".btn-editar", function() {
+            let id = $(this).data("id");
+            const modal = $("#modalEditar");
 
-        // Mostrar modal
-        modal.addClass("activo");
+            // Mostrar modal
+            modal.addClass("activo");
 
-        // Obtener datos vía AJAX
-        $.ajax({
-            url: "../../backend/php/empa/obtener_empa.php",
-            type: "GET",
-            data: {
-                id: id
-            },
-            dataType: "json",
-            success: function(data) {
-                $("#edit_id").val(data.IdEmpa);
-                $("#edit_tipo_soli").val(data.IdTipoSoli);
-                $("#edit_tipo_remi").val(data.IdTipoRemi);
-                $("#edit_dni").val(data.DNI_Soli);
-                $("#edit_solicitante").val(data.Solicitante);
-                $("#edit_integrantes").val(data.Integrantes);
-                $("#edit_archivador").val(data.Archivador);
-                $("#edit_anio").val(data.AÑO);
-                $("#edit_tipo_cse").val(data.TipoCSE);
-                $("#edit_empadronador").val(data.Empadronador);
-                $("#edit_observaciones").val(data.Observaciones);
-            },
-            error: function() {
-                alert("Error al obtener los datos del registro");
-            }
+            // Obtener datos vía AJAX
+            $.ajax({
+                url: "../../backend/php/empa/obtener_empa.php",
+                type: "GET",
+                data: {
+                    id: id
+                },
+                dataType: "json",
+                success: function(data) {
+                    $("#edit_id").val(data.IdEmpa);
+                    $("#edit_tipo_soli").val(data.IdTipoSoli);
+                    $("#edit_tipo_remi").val(data.IdTipoRemi);
+                    $("#edit_dni").val(data.DNI_Soli);
+                    $("#edit_solicitante").val(data.Solicitante);
+                    $("#edit_integrantes").val(data.Integrantes);
+                    $("#edit_archivador").val(data.Archivador);
+                    $("#edit_anio").val(data.AÑO);
+                    $("#edit_tipo_cse").val(data.TipoCSE);
+                    $("#edit_empadronador").val(data.Empadronador);
+                    $("#edit_observaciones").val(data.Observaciones);
+                },
+                error: function() {
+                    alert("Error al obtener los datos del registro");
+                }
+            });
         });
-    });
 
-    // CERRAR MODAL (botón X)
-    $(document).on("click", ".cerrar", function() {
-        $("#modalEditar").removeClass("activo");
-    });
-
-    // CERRAR MODAL SI HACEN CLICK FUERA DEL CONTENIDO
-    $(window).on("click", function(e) {
-        const modal = $("#modalEditar");
-        if ($(e.target).is(modal)) {
-            modal.removeClass("activo");
-        }
-    });
-
-    // GUARDAR CAMBIOS
-    $("#formEditar").submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            url: "../../backend/php/empa/actualizar_empa.php",
-            type: "POST",
-            data: $(this).serialize(),
-            success: function() {
-                alert("Registro actualizado correctamente");
-                $("#modalEditar").removeClass("activo");
-                location.reload(); // Opcional: reemplazar con actualización de tabla sin recargar
-            },
-            error: function() {
-                alert("Error al actualizar el registro");
-            }
+        // CERRAR MODAL (botón X)
+        $(document).on("click", ".cerrar", function() {
+            $("#modalEditar").removeClass("activo");
         });
-    });
-</script>
 
-<!-- SCRIPT PARA EL NAVBAR -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebar = document.getElementById('sidebar');
-        const tableContainer = document.querySelector('.table-container');
-        const overlay = document.querySelector('.body-overlay');
-        const toggleBtn = document.getElementById('sidebarCollapse');
-
-        const isMobile = () => window.innerWidth <= 768;
-
-        toggleBtn.addEventListener('click', () => {
-            if (isMobile()) {
-                // Móvil: ocultar/mostrar completamente
-                sidebar.classList.toggle('mobile-active');
-                overlay.classList.toggle('active');
-            } else {
-                // Desktop: colapsar ancho
-                sidebar.classList.toggle('collapsed');
-                tableContainer.classList.toggle('collapsed');
+        // CERRAR MODAL SI HACEN CLICK FUERA DEL CONTENIDO
+        $(window).on("click", function(e) {
+            const modal = $("#modalEditar");
+            if ($(e.target).is(modal)) {
+                modal.removeClass("activo");
             }
         });
 
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('mobile-active');
-            overlay.classList.remove('active');
+        // GUARDAR CAMBIOS
+        $("#formEditar").submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: "../../backend/php/empa/actualizar_empa.php",
+                type: "POST",
+                data: $(this).serialize(),
+                success: function() {
+                    alert("Registro actualizado correctamente");
+                    $("#modalEditar").removeClass("activo");
+                    location.reload(); // Opcional: reemplazar con actualización de tabla sin recargar
+                },
+                error: function() {
+                    alert("Error al actualizar el registro");
+                }
+            });
         });
+    </script>
 
-        // Ajuste automático al redimensionar ventana
-        window.addEventListener('resize', () => {
-            if (!isMobile()) {
+    <!-- SCRIPT PARA EL NAVBAR -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const tableContainer = document.querySelector('.table-container');
+            const overlay = document.querySelector('.body-overlay');
+            const toggleBtn = document.getElementById('sidebarCollapse');
+
+            const isMobile = () => window.innerWidth <= 768;
+
+            toggleBtn.addEventListener('click', () => {
+                if (isMobile()) {
+                    // Móvil: ocultar/mostrar completamente
+                    sidebar.classList.toggle('mobile-active');
+                    overlay.classList.toggle('active');
+                } else {
+                    // Desktop: colapsar ancho
+                    sidebar.classList.toggle('collapsed');
+                    tableContainer.classList.toggle('collapsed');
+                }
+            });
+
+            overlay.addEventListener('click', () => {
                 sidebar.classList.remove('mobile-active');
                 overlay.classList.remove('active');
-            }
+            });
+
+            // Ajuste automático al redimensionar ventana
+            window.addEventListener('resize', () => {
+                if (!isMobile()) {
+                    sidebar.classList.remove('mobile-active');
+                    overlay.classList.remove('active');
+                }
+            });
         });
-    });
-</script>
+    </script>
+</body>
 
 </html>

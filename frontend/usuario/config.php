@@ -40,6 +40,62 @@ $userInitial = strtoupper(substr($userName, 0, 1));
     <link rel="stylesheet" href="../../backend/css/navbar/navbar.css">
 
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <style>
+        /* Ocultar sidebar en móviles por defecto */
+        @media (max-width: 768px) {
+
+            /* Overlay solo cubre el contenido, no la topbar ni el toggle */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                /* debajo del toggle */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+                pointer-events: all;
+                /* sí bloquea el contenido debajo */
+            }
+
+            /* Cuando esté activo */
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar encima del overlay */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: var(--sidebar-w);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1005;
+                /* encima del overlay */
+            }
+
+            /* Toggle siempre encima de todo */
+            .topbar-toggle {
+                z-index: 1010;
+                /* encima de sidebar y overlay */
+                position: relative;
+                /* relativo dentro de la topbar */
+            }
+        }
+
+        /* En escritorio, ocultar botón toggle */
+        @media (min-width: 769px) {
+            .topbar-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -48,6 +104,7 @@ $userInitial = strtoupper(substr($userName, 0, 1));
 
     <div class="main">
         <header class="topbar">
+            <button id="toggleSidebar" class="topbar-toggle">☰</button>
             <div class="topbar-title">Mi <span>Perfil</span></div>
             <div class="topbar-right">
                 <span class="badge-tag">En vivo</span>
@@ -66,7 +123,7 @@ $userInitial = strtoupper(substr($userName, 0, 1));
 
                     <div class="text-center mb-4">
                         <div class="cuenta-avatar"><?= $userInitial ?></div>
-                        <h4 class="mt-2"><?= $user['Nombres'] . " " . $user['Ape_Pat'] . " " . $user['Ape_Mat']?></h4>
+                        <h4 class="mt-2"><?= $user['Nombres'] . " " . $user['Ape_Pat'] . " " . $user['Ape_Mat'] ?></h4>
                         <p class="text-muted"><?= $user['tipo'] ?></p>
                     </div>
 
@@ -115,6 +172,8 @@ $userInitial = strtoupper(substr($userName, 0, 1));
         </div>
 
     </div>
+
+    <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
 
     <script>
         const API = "../../backend/php/usuarios/fcs_usuarios.php";
