@@ -1,284 +1,300 @@
-/* backend/css/sisvis/registro/registro.css */
-* {
+/* ───────── RESET ───────── */
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+/* ───────── VARIABLES ───────── */
+:root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: rgba(255, 255, 255, 0.07);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --accent: #C8102E;
+    --accent2: #1a3a6b;
+    --success: #22c55e;
+    --warning: #facc15;
+    --danger: #ef4444;
+    --input-bg: #10131a;
+    --shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* ───────── BODY ───────── */
 body {
-    font-family: 'Barlow', sans-serif;
-    background: #f5f0eb;
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
+}
+
+/* ───────── TOPBAR ───────── */
+.topbar {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
-    position: relative;
-}
-
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-        -55deg,
-        transparent,
-        transparent 40px,
-        rgba(200,16,46,0.03) 40px,
-        rgba(200,16,46,0.03) 41px
-    );
-    pointer-events: none;
-}
-
-.top-bar {
-    position: fixed;
+    padding: 18px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    display: flex;
-}
-.top-bar div:nth-child(1) { background: #C8102E; flex: 1; }
-.top-bar div:nth-child(2) { background: #f5f0eb; flex: 1; }
-.top-bar div:nth-child(3) { background: #C8102E; flex: 1; }
-
-.wrapper {
-    width: 100%;
-    max-width: 450px;
-    animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) both;
+    z-index: 10;
 }
 
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to { opacity: 1; transform: translateY(0); }
+.topbar-title span {
+    color: var(--accent);
 }
 
-.brand {
+.badge-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(200, 16, 46, 0.12);
+    color: #ff6b81;
+}
+
+.user-chip {
     display: flex;
     align-items: center;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 28px;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    font-size: 12px;
+    color: var(--muted);
 }
 
-.brand-flag {
-    display: flex;
-    border-radius: 3px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+.user-avatar {
+    width: 26px;
     height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
 }
-.brand-flag div { width: 10px; }
-.brand-flag div:nth-child(1),
-.brand-flag div:nth-child(3) { background: #C8102E; }
-.brand-flag div:nth-child(2) { background: white; }
 
-.brand-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #1a3a6b;
+/* ───────── CONTENEDOR ───────── */
+/* Contenedor y tarjeta */
+.container-fluid {
+    background-color: #0d0f14;
+    /* fondo oscuro */
+    color: #e8eaf0;
+    /* texto claro */
+    min-height: 80vh;
 }
 
 .card {
-    background: white;
-    border-radius: 18px;
-    padding: 36px 32px 32px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    border-top: 3px solid #C8102E;
-}
-
-.card-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 30px;
-    font-weight: 900;
-    color: #1a1a2e;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    line-height: 1;
-    margin-bottom: 4px;
-    text-align: center;
-}
-.card-title span { color: #C8102E; }
-
-.card-sub {
-    font-size: 13px;
-    color: #999;
-    margin-bottom: 26px;
-    text-align: center;
-}
-
-.mensaje {
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.mensaje.exito {
-    background-color: #e6f7e6;
-    color: #2e7d32;
-    border: 1px solid #a5d6a5;
-}
-
-.mensaje.error {
-    background-color: #ffebee;
-    color: #c62828;
-    border: 1px solid #ef9a9a;
-}
-
-.field {
-    margin-bottom: 16px;
-}
-
-label {
-    display: block;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #1a3a6b;
-    margin-bottom: 7px;
-}
-
-.input-wrap {
-    position: relative;
-}
-
-.icon {
-    position: absolute;
-    left: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #ccc;
-    display: flex;
-    align-items: center;
-    pointer-events: none;
-}
-
-input, select {
-    width: 100%;
-    background: #fafafa;
-    border: 1.5px solid #ececec;
-    border-radius: 10px;
-    padding: 11px 13px 11px 38px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    color: #1a1a2e;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-}
-
-input::placeholder {
-    color: #ccc;
-}
-
-input:focus, select:focus {
-    border-color: #C8102E;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(200,16,46,0.08);
-}
-
-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ccc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 13px center;
-    background-size: 14px;
-}
-
-.toggle-btn {
-    position: absolute;
-    right: 11px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
+    background-color: #13161e;
+    /* tono oscuro para la tarjeta */
+    border-radius: 8px;
     border: none;
-    color: #ccc;
-    cursor: pointer;
-    display: flex;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Header de la tarjeta */
+.card-header {
+    background-color: #1a1e2a !important;
+    color: #e8eaf0 !important;
+    font-weight: 700;
+    font-size: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Botón Nuevo Usuario */
+.btn-light {
+    background-color: #C8102E !important;
+    color: #e8eaf0 !important;
+    border: 1px solid #444;
+}
+
+.btn-light:hover {
+    background-color: #3a3f51 !important;
+    color: #fff !important;
+}
+
+/* Tabla general */
+table.dataTable,
+table.dataTable th,
+table.dataTable td {
+    background-color: #1a1e2a !important;
+    color: #e8eaf0 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
     align-items: center;
-    padding: 4px;
-    transition: color 0.2s;
 }
 
-.toggle-btn:hover {
-    color: #888;
+/* Header de tabla */
+table.dataTable thead th {
+    background-color: transparent !important;
+    /* elimina azul predeterminado */
+    color: #C8102E !important;
+    /* color rojo accent para encabezados */
+    border-bottom: 2px solid #C8102E !important;
 }
 
-.btn {
-    width: 100%;
-    padding: 13px;
-    background: #C8102E;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    box-shadow: 0 4px 14px rgba(200,16,46,0.28);
-    margin-top: 10px;
+/* Filas alternas */
+table.dataTable tbody tr:nth-child(odd) {
+    background-color: #222831 !important;
 }
 
-.btn:hover {
-    background: #a50d25;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(200,16,46,0.38);
+table.dataTable tbody tr:nth-child(even) {
+    background-color: #1a1e2a !important;
 }
 
-.btn:active {
-    transform: translateY(0);
+/* Hover en filas */
+table.dataTable tbody tr:hover {
+    background-color: #2a2e3e !important;
 }
 
-.foot-note {
-    text-align: center;
-    font-size: 13px;
-    color: #888;
-    margin-top: 20px;
-}
-
-.foot-note a {
+/* Botones de acción: iconos con fondo oscuro y color */
+.btn-accion {
+    border: 1px solid #C8102E;
+    background-color: transparent;
     color: #C8102E;
-    font-weight: 600;
-    text-decoration: none;
+    padding: 4px 6px;
+    margin: 0 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.foot-note a:hover {
-    text-decoration: underline;
+.btn-accion:hover {
+    background-color: #C8102E;
+    color: #fff;
 }
 
-.status-row {
+/* Material icons dentro de botones de acción */
+.btn-accion i.material-icons {
+    font-size: 18px;
+}
+
+/* Ajustes paginación */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: transparent !important;
+    border: 1px solid #444 !important;
+    color: #e8eaf0 !important;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin: 0 2px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color: #C8102E !important;
+    color: white !important;
+}
+
+/* Inputs de búsqueda y select */
+.dataTables_filter input,
+.dataTables_length select {
+    background-color: #222831;
+    border: 1px solid #444;
+    color: #e8eaf0;
+    border-radius: 4px;
+    padding: 5px 8px;
+}
+
+/* Ajuste de la barra lateral y topbar para que combinen (opcional) */
+.topbar {
+    background-color: #13161e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e8eaf0;
+}
+
+/* Otros detalles para texto */
+.badge-tag {
+    background-color: #C8102E;
+    color: white;
+    font-weight: 700;
+}
+
+.user-chip {
+    background-color: #222831;
+    color: #e8eaf0;
+}
+
+/* Para que los botones de acción tengan la clase btn-accion */
+
+/* ───────── MODALES ───────── */
+.modal-content {
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 10px;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header.bg-primary {
+    background: var(--accent);
+    color: #fff;
+}
+
+.modal-header.bg-warning {
+    background: var(--warning);
+    color: #1a1a1a;
+}
+
+.modal-body input,
+.modal-body select,
+.modal-body textarea {
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.92rem;
+    width: 100%;
+}
+
+.modal-body textarea {
+    resize: vertical;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border);
+}
+
+/* Scroll en modales grandes */
+.modal-dialog {
+    max-height: 80vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 6px;
-    margin-top: 18px;
-    font-size: 11px;
-    color: #bbb;
 }
 
-.status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #22c55e;
+.modal-body {
+    overflow-y: auto;
+    max-height: 60vh;
+    padding-right: 1rem;
 }
 
-hr {
-    border: none;
-    height: 1px;
-    background: #271919;
-    margin-bottom: 22px;
+/* Input group para contraseña */
+.input-group .form-control {
+    border-radius: 6px 0 0 6px;
+}
+
+.input-group .btn {
+    border-radius: 0 6px 6px 0;
+}
+
+/* ───────── RESPONSIVE ───────── */
+@media(max-width: 768px) {
+    .modal-dialog {
+        width: 95%;
+    }
+
+    #tablaUsuarios th,
+    #tablaUsuarios td {
+        font-size: 0.85rem;
+        padding: 6px 8px;
+    }
 }

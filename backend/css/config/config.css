@@ -1,18 +1,215 @@
-.cuenta-card {
-    max-width: 700px;
-    margin: auto;
-    margin-top: 40px;
+/* ───────── RESET ───────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
+/* ───────── VARIABLES ───────── */
+:root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: rgba(255, 255, 255, 0.07);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --accent: #C8102E;
+    --accent2: #1a3a6b;
+    --success: #22c55e;
+    --warning: #facc15;
+    --danger: #ef4444;
+    --input-bg: #10131a;
+    --shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* ───────── BODY ───────── */
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ───────── TOPBAR ───────── */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.topbar-title span {
+    color: var(--accent);
+}
+
+.badge-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(200, 16, 46, 0.12);
+    color: #ff6b81;
+}
+
+.user-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ───────── CONTENEDOR Y TARJETA ───────── */
+.container {
+    min-height: 80vh;
+    padding: 30px 15px;
+}
+
+.cuenta-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--surface);
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 16px var(--shadow);
+    color: var(--text);
+}
+
+.cuenta-card h4,
+.cuenta-card h5 {
+    font-weight: 600;
+}
+
+.cuenta-card h5 i {
+    vertical-align: middle;
+}
+
+hr {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ───────── AVATAR ───────── */
 .cuenta-avatar {
     width: 80px;
     height: 80px;
+    margin: 0 auto;
     border-radius: 50%;
-    background: #0d6efd;
-    color: white;
-    font-size: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ───────── FORMULARIOS E INPUTS ───────── */
+.cuenta-card .form-control {
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.92rem;
+}
+
+.cuenta-card .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(200, 16, 46, 0.25);
+}
+
+.cuenta-card button.btn-primary {
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: #fff;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: auto;
+    gap: 4px;
+}
+
+.cuenta-card button.btn-primary:hover {
+    background: #a70b1f;
+    border-color: #a70b1f;
+}
+
+/* ───────── ALERTS ───────── */
+#alertaCuenta .alert {
+    font-size: 0.9rem;
+    border-radius: 6px;
+}
+
+/* ───────── MODALES ───────── */
+.modal-content {
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 10px;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header.bg-primary {
+    background: var(--accent);
+    color: #fff;
+}
+
+.modal-header.bg-warning {
+    background: var(--warning);
+    color: #1a1a1a;
+}
+
+.modal-body input,
+.modal-body select,
+.modal-body textarea {
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.92rem;
+    width: 100%;
+}
+
+.input-group .form-control {
+    border-radius: 6px 0 0 6px;
+}
+
+.input-group .btn {
+    border-radius: 0 6px 6px 0;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border);
+}
+
+/* ───────── RESPONSIVE ───────── */
+@media (max-width: 768px) {
+    .cuenta-card {
+        margin: 20px 10px;
+    }
 }

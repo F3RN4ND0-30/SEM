@@ -76,21 +76,21 @@ $usuariosActivos = (int)$stmtUsers->fetchColumn();
                 <div class="chip green">
                     <div class="chip-dot"></div>
                     <div>
-                        <div class="chip-label">No Pobres</div>
+                        <div class="chip-label">NO POBRE</div>
                         <div class="chip-value" data-count="<?= $totalNoPobre ?>">000</div>
                     </div>
                 </div>
                 <div class="chip yellow">
                     <div class="chip-dot"></div>
                     <div>
-                        <div class="chip-label">Pobres</div>
+                        <div class="chip-label">POBRE</div>
                         <div class="chip-value" data-count="<?= $totalPobre ?>">000</div>
                     </div>
                 </div>
                 <div class="chip red">
                     <div class="chip-dot"></div>
                     <div>
-                        <div class="chip-label">Pobre Extremo</div>
+                        <div class="chip-label">POBRE EXTREMO</div>
                         <div class="chip-value" data-count="<?= $totalExtremo ?>">000</div>
                     </div>
                 </div>

@@ -1,66 +1,322 @@
-/* Formulario moderno tipo dashboard */
-body {
-    font-family: 'Barlow', sans-serif;
-    background: #f5f5f7;
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
+
+:root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: rgba(255, 255, 255, 0.07);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+
+    --accent: #C8102E;
+    --accent2: #1a3a6b;
+
+    --input-bg: #10131a;
+    --danger: #ef4444;
+
+    --sidebar-w: 220px;
+}
+
+/* BODY */
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+}
+
+/* ───────── TOPBAR ───────── */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.topbar-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.topbar-title span {
+    color: var(--accent);
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.badge-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(200, 16, 46, 0.12);
+    color: #ff6b81;
+    letter-spacing: .04em;
+}
+
+.user-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #1a3a6b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ───────── CONTENIDO ───────── */
+
+.content {
+    padding: 32px;
+    flex: 1;
+}
+
+/* ───────── FORMULARIO ───────── */
 
 .form-container {
-    width: 100%;
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 30px;
-    background: white;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    padding: 2rem;
+
+    max-width: 1200px;
+    /* antes 900px */
+    width: 95%;
+
+    margin: auto;
+
+    max-height: 75vh;
+    /* altura máxima */
+    overflow-y: auto;
+    /* barra de scroll */
 }
 
-h2 {
-    text-align: center;
-    color: #c8102e;
-    margin-bottom: 25px;
+.form-container::-webkit-scrollbar {
+    width: 8px;
 }
+
+.form-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.form-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+}
+
+.form-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.form-container h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 1.8rem;
+}
+
+/* GRID */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+/* GRUPO */
 
 .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
+    gap: 6px;
 }
 
-label {
+/* LABEL */
+
+.form-group label {
+    font-size: .75rem;
     font-weight: 600;
-    margin-bottom: 5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
 }
 
-input,
-select,
-textarea {
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-}
+/* INPUTS */
 
-input:focus,
-select:focus,
-textarea:focus {
-    border-color: #c8102e;
+.form-group input,
+.form-group select,
+.form-group textarea {
+    background: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: .65rem .9rem;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: .92rem;
     outline: none;
+    transition: border-color .15s, box-shadow .15s, background .2s;
+    width: 100%;
 }
 
-.btn-submit {
-    width: 100%;
-    padding: 12px;
-    background: #c8102e;
-    color: white;
-    font-weight: 600;
+/* FOCUS */
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.12);
+}
+
+/* VALIDACIÓN */
+
+input.valid {
+    border-color: var(--green);
+}
+
+input.invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+/* AUTOFILL */
+
+input.autofilled {
+    background: rgba(56, 217, 169, 0.06);
+    border-color: rgba(56, 217, 169, 0.35);
+    color: var(--accent2);
+}
+
+/* HINT */
+
+.hint {
+    font-size: .72rem;
+    color: var(--muted);
+    min-height: 1rem;
+}
+
+.hint.error {
+    color: var(--danger);
+}
+
+.hint.ok {
+    color: var(--green);
+}
+
+/* INPUT WRAP */
+
+.input-wrap {
+    position: relative;
+}
+
+.input-wrap input {
+    padding-right: 2.2rem;
+}
+
+/* SPINNER DNI */
+
+#dni-spinner {
+    display: none;
+    position: absolute;
+    right: .75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+/* BOTÓN */
+
+button[type="submit"] {
+    background: var(--accent);
+    color: #fff;
     border: none;
     border-radius: 8px;
+    padding: .8rem 2.2rem;
+    font-size: .95rem;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 1.1rem;
-    transition: background 0.3s;
+    transition: .15s;
+    margin-top: 10px;
 }
 
-.btn-submit:hover {
-    background: #a30b26;
+button[type="submit"]:hover {
+    background: #a80c26;
+    transform: translateY(-1px);
+}
+
+/* ACCIONES */
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width:768px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .span-2 {
+        grid-column: span 1;
+    }
+
 }

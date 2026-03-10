@@ -36,9 +36,10 @@ $userInitial = strtoupper(substr($userName, 0, 1));
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css">
     <link rel="stylesheet" href="../../backend/css/config/config.css">
+    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css">
 
+    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 </head>
 
 <body>
@@ -46,7 +47,16 @@ $userInitial = strtoupper(substr($userName, 0, 1));
     <?php include '../navbar/navbar.php'; ?>
 
     <div class="main">
-        <?php include "../topbar/topbar.php"; ?>
+        <header class="topbar">
+            <div class="topbar-title">Mi <span>Perfil</span></div>
+            <div class="topbar-right">
+                <span class="badge-tag">En vivo</span>
+                <div class="user-chip">
+                    <div class="user-avatar"><?= htmlspecialchars($userInitial) ?></div>
+                    <?= htmlspecialchars($userName) ?>
+                </div>
+            </div>
+        </header>
 
         <div class="container">
 
@@ -56,7 +66,7 @@ $userInitial = strtoupper(substr($userName, 0, 1));
 
                     <div class="text-center mb-4">
                         <div class="cuenta-avatar"><?= $userInitial ?></div>
-                        <h4 class="mt-2"><?= $user['Nombres'] . " " . $user['Ape_Pat'] ?></h4>
+                        <h4 class="mt-2"><?= $user['Nombres'] . " " . $user['Ape_Pat'] . " " . $user['Ape_Mat']?></h4>
                         <p class="text-muted"><?= $user['tipo'] ?></p>
                     </div>
 

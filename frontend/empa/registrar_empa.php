@@ -27,137 +27,166 @@ $anioActual = date('Y');
 
 <body>
     <?php include "../navbar/navbar.php"; ?>
-    
-    <div class="form-container">
-        <h2>Registrar Empadronamiento</h2>
-        <form action="../../backend/php/empa/guardar_empa.php" method="POST">
 
-            <!-- Tipo de Solicitud -->
-            <div class="form-group">
-                <label>Tipo de Solicitud</label>
-                <select name="tipo_solicitud" required>
-                    <option value="">Seleccione</option>
-                    <?php foreach ($tipoSolicitudes as $ts): ?>
-                        <option value="<?= $ts['IdTipoSoli'] ?>"><?= $ts['Descripcion'] ?></option>
-                    <?php endforeach; ?>
-                </select>
+    <div class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-title">Registro de <span>Empadronamiento</span></div>
+            <div class="topbar-right">
+                <span class="badge-tag">En vivo</span>
+                <div class="user-chip">
+                    <div class="user-avatar"><?= htmlspecialchars($userInitial) ?></div>
+                    <?= htmlspecialchars($userName) ?>
+                </div>
             </div>
+        </header>
 
-            <!-- Tipo de Remisión -->
-            <div class="form-group">
-                <label>Tipo de Remisión</label>
-                <select name="tipo_remision" required>
-                    <option value="">Seleccione</option>
-                    <?php foreach ($tipoRemisiones as $tr): ?>
-                        <option value="<?= $tr['IdTipoRemi'] ?>"><?= $tr['Descripcion'] ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+        <div class="form-container">
+            <form action="../../backend/php/empa/guardar_empa.php" method="POST">
 
-            <!-- Formatos y fechas -->
-            <div class="form-group">
-                <label>Formato D100</label>
-                <input type="number" name="d100" required maxlength="7" pattern="\d{1,7}" title="Máximo 7 números">
-            </div>
+                <div class="form-grid">
 
-            <div class="form-group">
-                <label>S100</label>
-                <input type="number" name="s100" required maxlength="8" pattern="\d{1,8}" title="Máximo 8 números">
-            </div>
+                    <!-- Tipo Solicitud -->
+                    <div class="form-group">
+                        <label>Tipo de Solicitud</label>
+                        <select name="tipo_solicitud" required>
+                            <option value="">Seleccione</option>
+                            <?php foreach ($tipoSolicitudes as $ts): ?>
+                                <option value="<?= $ts['IdTipoSoli'] ?>"><?= $ts['Descripcion'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label>Fecha S100</label>
-                <input type="text" class="datepicker" name="fecha_s100" required>
-            </div>
+                    <!-- Tipo Remision -->
+                    <div class="form-group">
+                        <label>Tipo de Remisión</label>
+                        <select name="tipo_remision" required>
+                            <option value="">Seleccione</option>
+                            <?php foreach ($tipoRemisiones as $tr): ?>
+                                <option value="<?= $tr['IdTipoRemi'] ?>"><?= $tr['Descripcion'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label>FSU</label>
-                <input type="number" name="fsu" required maxlength="8" pattern="\d{1,8}" title="Máximo 8 números">
-            </div>
+                    <!-- D100 ancho completo -->
+                    <div class="form-group span-2">
+                        <label>Formato D100</label>
+                        <input type="number" name="d100" required>
+                    </div>
 
-            <div class="form-group">
-                <label>Fecha FSU</label>
-                <input type="text" class="datepicker" name="fecha_fsu" required>
-            </div>
+                    <!-- S100 -->
+                    <div class="form-group">
+                        <label>S100</label>
+                        <input type="number" name="s100" required>
+                    </div>
 
-            <!-- Tipo documento -->
-            <div class="form-group">
-                <label>Tipo Documento</label>
-                <select name="tipo_doc" required>
-                    <option value="">Seleccione</option>
-                    <option value="DNI">DNI</option>
-                    <option value="CE">CE</option>
-                </select>
-            </div>
+                    <!-- Fecha S100 -->
+                    <div class="form-group">
+                        <label>Fecha S100</label>
+                        <input type="text" class="datepicker" name="fecha_s100" required>
+                    </div>
 
-            <!-- Datos solicitante -->
-            <div class="form-group">
-                <label>DNI del Solicitante</label>
-                <input type="number" name="dni_solicitante" required>
-            </div>
+                    <!-- FSU -->
+                    <div class="form-group">
+                        <label>FSU</label>
+                        <input type="number" name="fsu" required>
+                    </div>
 
-            <div class="form-group">
-                <label>Nombre del Solicitante</label>
-                <input type="text" name="nombre_solicitante" required>
-            </div>
+                    <!-- Fecha FSU -->
+                    <div class="form-group">
+                        <label>Fecha FSU</label>
+                        <input type="text" class="datepicker" name="fecha_fsu" required>
+                    </div>
 
-            <div class="form-group">
-                <label>Número de Integrantes</label>
-                <input type="number" name="num_integrantes" required>
-            </div>
+                    <!-- Tipo Documento -->
+                    <div class="form-group">
+                        <label>Tipo Documento</label>
+                        <select name="tipo_doc" required>
+                            <option value="">Seleccione</option>
+                            <option value="DNI">DNI</option>
+                            <option value="CE">CE</option>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label>Número de Archivador</label>
-                <input type="number" name="num_archivador" required>
-            </div>
+                    <!-- DNI -->
+                    <div class="form-group">
+                        <label>DNI del Solicitante</label>
+                        <input type="number" name="dni_solicitante" required>
+                    </div>
 
-            <div class="form-group">
-                <label>Año</label>
-                <input type="number" name="anio" value="<?= $anioActual ?>" required>
-            </div>
+                    <!-- Nombre ancho completo -->
+                    <div class="form-group span-2">
+                        <label>Nombre del Solicitante</label>
+                        <input type="text" name="nombre_solicitante" required>
+                    </div>
 
-            <!-- Tipo de CSE -->
-            <div class="form-group">
-                <label>Tipo de CSE</label>
-                <select name="tipo_cse" required>
-                    <option value="">Seleccione</option>
-                    <option value="NO POBRE">NO POBRE</option>
-                    <option value="POBRE">POBRE</option>
-                    <option value="POBRE EXTREMO">POBRE EXTREMO</option>
-                </select>
-            </div>
+                    <!-- Integrantes -->
+                    <div class="form-group">
+                        <label>Número de Integrantes</label>
+                        <input type="number" name="num_integrantes" required>
+                    </div>
 
-            <div class="form-group">
-                <label>Fecha Inicio CSE</label>
-                <input type="text" class="datepicker" name="fecha_inicio_cse" required>
-            </div>
+                    <!-- Archivador -->
+                    <div class="form-group">
+                        <label>Número de Archivador</label>
+                        <input type="number" name="num_archivador" required>
+                    </div>
 
-            <div class="form-group">
-                <label>Fecha Fin CSE</label>
-                <input type="text" class="datepicker" name="fecha_fin_cse" required>
-            </div>
+                    <!-- Año -->
+                    <div class="form-group">
+                        <label>Año</label>
+                        <input type="number" name="anio" value="<?= $anioActual ?>" required>
+                    </div>
 
-            <!-- Empadronador -->
-            <div class="form-group">
-                <label>Empadronador</label>
-                <select name="empadronador" required>
-                    <option value="">Seleccione</option>
-                    <?php foreach ($empadronadores as $emp): ?>
-                        <option value="<?= $emp['Nombres'] ?> <?= $emp['Ape_Pat'] ?> <?= $emp['Ape_Mat'] ?>">
-                            <?= $emp['Nombres'] ?> <?= $emp['Ape_Pat'] ?> <?= $emp['Ape_Mat'] ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+                    <!-- Tipo CSE -->
+                    <div class="form-group">
+                        <label>Tipo de CSE</label>
+                        <select name="tipo_cse" required>
+                            <option value="">Seleccione</option>
+                            <option value="NO POBRE">NO POBRE</option>
+                            <option value="POBRE">POBRE</option>
+                            <option value="POBRE EXTREMO">POBRE EXTREMO</option>
+                        </select>
+                    </div>
 
-            <!-- Observaciones -->
-            <div class="form-group">
-                <label>Observaciones</label>
-                <textarea name="observaciones" rows="3"></textarea>
-            </div>
+                    <!-- Fecha inicio -->
+                    <div class="form-group">
+                        <label>Fecha Inicio CSE</label>
+                        <input type="text" class="datepicker" name="fecha_inicio_cse" required>
+                    </div>
 
-            <button type="submit" class="btn-submit">Registrar</button>
-        </form>
+                    <!-- Fecha fin -->
+                    <div class="form-group">
+                        <label>Fecha Fin CSE</label>
+                        <input type="text" class="datepicker" name="fecha_fin_cse" required>
+                    </div>
+
+                    <!-- Empadronador -->
+                    <div class="form-group span-2">
+                        <label>Empadronador</label>
+                        <select name="empadronador" required>
+                            <option value="">Seleccione</option>
+                            <?php foreach ($empadronadores as $emp): ?>
+                                <option value="<?= $emp['Nombres'] ?> <?= $emp['Ape_Pat'] ?> <?= $emp['Ape_Mat'] ?>">
+                                    <?= $emp['Nombres'] ?> <?= $emp['Ape_Pat'] ?> <?= $emp['Ape_Mat'] ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Observaciones ancho completo -->
+                    <div class="form-group span-2">
+                        <label>Observaciones</label>
+                        <textarea name="observaciones" rows="3"></textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-submit">Registrar</button>
+
+            </form>
+        </div>
     </div>
 
     <script>

@@ -15,22 +15,23 @@ if (!isset($_SESSION['user_id'])) {
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de Usuarios - SEM</title>
 
     <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
 
     <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-    <!-- CSS personalizado -->
-    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css">
-    <link rel="stylesheet" href="../../backend/css/empa/registrar_empa.css">
+    <!-- CSS personalizado (AL FINAL, para que sobreescriba) -->
+    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css" />
+    <link rel="stylesheet" href="../../backend/css/sisvis/registro/registro.css" />
+    <link rel="stylesheet" href="../../backend/css/sisvis/registro/modales.css" />
 
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
 </head>
@@ -40,7 +41,16 @@ if (!isset($_SESSION['user_id'])) {
     <div class="main">
 
         <!-- TOPBAR -->
-        <?php include "../topbar/topbar.php"; ?>
+        <header class="topbar">
+            <div class="topbar-title">Gestión de <span>Usuarios</span></div>
+            <div class="topbar-right">
+                <span class="badge-tag">En vivo</span>
+                <div class="user-chip">
+                    <div class="user-avatar"><?= htmlspecialchars($userInitial) ?></div>
+                    <?= htmlspecialchars($userName) ?>
+                </div>
+            </div>
+        </header>
 
         <div class="container-fluid p-4">
             <div class="usuarios-alert-container"></div>
@@ -88,22 +98,22 @@ if (!isset($_SESSION['user_id'])) {
                         <form id="formCrearUsuario">
                             <div class="mb-3 row">
                                 <div class="col-md-6">
-                                    <label for="nombres" class="form-label">Nombres *</label>
-                                    <input type="text" id="nombres" class="form-control" required>
+                                    <label for="dni" class="form-label">DNI *</label>
+                                    <input type="text" id="dni" class="form-control" maxlength="8" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="ape_pat" class="form-label">Apellido Paterno *</label>
-                                    <input type="text" id="ape_pat" class="form-control" required>
+                                    <label for="nombres" class="form-label">Nombres *</label>
+                                    <input type="text" id="nombres" class="form-control" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <div class="col-md-6">
-                                    <label for="ape_mat" class="form-label">Apellido Materno *</label>
-                                    <input type="text" id="ape_mat" class="form-control" required>
+                                    <label for="ape_pat" class="form-label">Apellido Paterno *</label>
+                                    <input type="text" id="ape_pat" class="form-control" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="dni" class="form-label">DNI *</label>
-                                    <input type="text" id="dni" class="form-control" maxlength="8" required>
+                                    <label for="ape_mat" class="form-label">Apellido Materno *</label>
+                                    <input type="text" id="ape_mat" class="form-control" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -229,11 +239,13 @@ if (!isset($_SESSION['user_id'])) {
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../backend/js/usuarios/usuarios.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const dniInput = document.getElementById('dni');
             const nombresInput = document.getElementById('nombres');
-            const apellidosInput = document.getElementById('apellidos');
+            const apePatInput = document.getElementById('ape_pat');
+            const apeMatInput = document.getElementById('ape_mat');
             const correoInput = document.getElementById('correo');
 
             dniInput.addEventListener('keypress', function(e) {
@@ -261,34 +273,29 @@ if (!isset($_SESSION['user_id'])) {
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === 'success') {
-                            // Concatenar y limpiar nombres completos
-                            let fullName = `${data.prenombres}`;
-                            fullName = fullName.replace(/\s+/g, ' ').trim();
+                            // Nombres
+                            let fullName = `${data.prenombres}`.replace(/\s+/g, ' ').trim();
                             nombresInput.value = fullName;
                             nombresInput.focus();
 
                             // Apellidos separados
-                            let lastNames = `${data.apPrimer} ${data.apSegundo}`;
-                            lastNames = lastNames.replace(/\s+/g, ' ').trim();
-                            apellidosInput.value = lastNames;
+                            apePatInput.value = data.apPrimer || '';
+                            apeMatInput.value = data.apSegundo || '';
 
-                            // Autocompletar correo solo si está vacío o no tiene '@'
+                            // Autocompletar correo si no tiene '@'
                             if (!correoInput.value.includes('@')) {
                                 const primerNombre = data.prenombres.split(' ')[0];
                                 const primerApellido = data.apPrimer.split(' ')[0];
-                                const correoGenerado = (primerNombre[0] + primerApellido).toLowerCase().replace(/\s+/g, '');
-                                correoInput.value = correoGenerado + '@sem.gob.pe';
+                                correoInput.value = (primerNombre[0] + primerApellido).toLowerCase() + '@sem.gob.pe';
                             }
-
                         } else {
                             nombresInput.value = '';
-                            apellidosInput.value = '';
+                            apePatInput.value = '';
+                            apeMatInput.value = '';
                             correoInput.value = '';
                         }
                     })
-                    .catch(err => {
-                        console.error('Error al consultar RENIEC:', err);
-                    });
+                    .catch(err => console.error('Error al consultar RENIEC:', err));
             }
         });
     </script>

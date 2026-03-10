@@ -1,138 +1,268 @@
-/* Variables de color y fuentes */
-:root {
-    --primary-color: #c8102e;
-    --primary-hover: #a30b26;
-    --bg-color: #f5f0eb;
-    --table-header-bg: #faf7f5;
-    --table-border: #ddd;
-    --text-color: #222;
-    --shadow: rgba(0, 0, 0, 0.1);
-}
-
-/* Reset básico */
-body {
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     margin: 0;
-    font-family: 'Barlow', sans-serif;
-    background: var(--bg-color);
-    color: var(--text-color);
+    padding: 0;
 }
 
-/* Tabla desktop */
-.table-container {
-    margin-left: 40px;
-    width: calc(100% - 220px);
-    transition: margin-left 0.3s ease, width 0.3s ease;
+:root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: rgba(255, 255, 255, 0.07);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+
+    --accent: #C8102E;
+    --accent2: #1a3a6b;
+
+    --input-bg: #10131a;
+    --danger: #ef4444;
+
+    --sidebar-w: 220px;
 }
 
-/* Título de la página */
-.table-container h2 {
-    margin-bottom: 20px;
-    color: var(--primary-color);
+/* BODY */
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+}
+
+/* ───────── TOPBAR ───────── */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.topbar-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
     font-weight: 700;
 }
 
-/* Estilo general de la tabla */
+.topbar-title span {
+    color: var(--accent);
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.badge-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(200, 16, 46, 0.12);
+    color: #ff6b81;
+    letter-spacing: .04em;
+}
+
+.user-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #1a3a6b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ───────── CONTENIDO ───────── */
+
+.content {
+    padding: 32px;
+    flex: 1;
+}
+
+/* ───────── CONTENEDOR TABLA ───────── */
+
+.table-container {
+    width: 100%;
+    padding: 32px;
+}
+
+/* título */
+
+.table-container h2 {
+    margin-bottom: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'Nunito', sans-serif;
+}
+
+/* wrapper datatables */
+
 #empadronamientos_wrapper {
     width: 100%;
     overflow-x: auto;
-    box-shadow: 0 2px 8px var(--shadow);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 10px;
-    background: white;
-    padding: 10px;
+    padding: 14px;
 }
+
+/* tabla */
 
 #empadronamientos {
     width: 100% !important;
     border-collapse: collapse;
+    font-size: .9rem;
 }
 
-#empadronamientos th,
-#empadronamientos td {
-    padding: 10px 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--table-border);
-    font-size: 0.95rem;
+/* header */
+
+#empadronamientos thead {
+    background: var(--surface2);
 }
 
 #empadronamientos th {
-    background-color: var(--table-header-bg);
-    color: var(--primary-color);
+    color: var(--accent);
     font-weight: 600;
+    text-transform: uppercase;
+    font-size: .75rem;
+    letter-spacing: .05em;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--border);
 }
 
-#empadronamientos tr:hover {
-    background-color: #f2f2f2;
+/* filas */
+
+#empadronamientos td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
 }
 
-/* DataTables elementos */
+/* hover */
+
+#empadronamientos tbody tr {
+    transition: background .15s;
+}
+
+#empadronamientos tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* zebra rows */
+
+#empadronamientos tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.015);
+}
+
+/* ───────── DATATABLES ───────── */
+
+/* filtro y select */
+
 .dataTables_length select,
 .dataTables_filter input {
-    border: 1px solid var(--table-border);
-    padding: 4px 8px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 8px;
     border-radius: 6px;
-    outline: none;
-    font-size: 0.9rem;
+    font-size: .85rem;
+    margin-left: 6px;
+}
+
+/* texto datatable */
+
+.dataTables_info {
+    color: var(--muted);
+    font-size: .8rem;
+}
+
+/* paginación */
+
+.dataTables_paginate {
+    margin-top: 10px;
 }
 
 .dataTables_paginate .paginate_button {
-    color: var(--primary-color) !important;
-    border: 1px solid var(--primary-color);
-    border-radius: 5px;
-    padding: 4px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text) !important;
+    border-radius: 6px;
+    padding: 4px 9px;
     margin: 0 2px;
-}
-
-.dataTables_paginate .paginate_button.current {
-    background-color: var(--primary-color) !important;
-    color: white !important;
+    font-size: .8rem;
+    transition: .15s;
 }
 
 .dataTables_paginate .paginate_button:hover {
-    background-color: var(--primary-hover) !important;
+    background: var(--accent);
+    border-color: var(--accent);
     color: white !important;
 }
 
+.dataTables_paginate .paginate_button.current {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: white !important;
+}
+
+/* ───────── BOTONES ───────── */
+
 .btn-editar {
-    background: #3498db;
+    background: var(--accent2);
     color: white;
     padding: 6px 10px;
-    border-radius: 4px;
+    border-radius: 5px;
     text-decoration: none;
-    font-size: 14px;
+    font-size: .8rem;
+    font-weight: 500;
+    transition: .15s;
 }
 
 .btn-editar:hover {
-    background: #217dbb;
+    background: #274c86;
 }
 
-/* Scroll horizontal para pantallas pequeñas */
-@media (max-width: 992px) {
+/* ───────── RESPONSIVE ───────── */
+
+@media(max-width:768px) {
+
     .table-container {
-        margin-left: 60px;
-        /* sidebar más pequeño en tablet */
-        padding: 15px;
+        padding: 16px;
     }
 
     #empadronamientos th,
     #empadronamientos td {
         padding: 8px 6px;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .table-container {
-        margin-left: 0;
-        padding: 10px;
+        font-size: .8rem;
     }
 
-    #empadronamientos_wrapper {
-        padding: 0;
-    }
-
-    #empadronamientos th,
-    #empadronamientos td {
-        padding: 6px 4px;
-        font-size: 0.8rem;
-    }
 }

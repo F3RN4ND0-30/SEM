@@ -29,124 +29,137 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
 
 <body>
     <?php include "../navbar/navbar.php"; ?>
+    <div class="main">
 
-    <div class="table-container">
-        <h2>Listado de Empadronamientos</h2>
-        <table id="empadronamientos" class="display nowrap" style="width:100%">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tipo Solicitud</th>
-                    <th>Tipo Remisión</th>
-                    <th>Fecha</th>
-                    <th>D100</th>
-                    <th>S100</th>
-                    <th>Fecha S100</th>
-                    <th>FSU</th>
-                    <th>Fecha FSU</th>
-                    <th>Tipo Doc</th>
-                    <th>DNI</th>
-                    <th>Solicitante</th>
-                    <th>Integrantes</th>
-                    <th>Archivador</th>
-                    <th>Año</th>
-                    <th>Tipo CSE</th>
-                    <th>Inicio CSE</th>
-                    <th>Final CSE</th>
-                    <th>Empadronador</th>
-                    <th>Observaciones</th>
-                    <?php if ($_SESSION['user_type'] == 1): ?>
-                        <th>Acciones</th>
-                    <?php endif; ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($empadronamientos as $e): ?>
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-title">Lista de <span>Empadronamiento</span></div>
+            <div class="topbar-right">
+                <span class="badge-tag">En vivo</span>
+                <div class="user-chip">
+                    <div class="user-avatar"><?= htmlspecialchars($userInitial) ?></div>
+                    <?= htmlspecialchars($userName) ?>
+                </div>
+            </div>
+        </header>
+
+        <div class="table-container">
+            <table id="empadronamientos" class="display nowrap" style="width:100%">
+                <thead>
                     <tr>
-                        <td><?= $e['IdEmpa'] ?></td>
-                        <td><?= $e['TipoSolicitud'] ?></td>
-                        <td><?= $e['TipoRemision'] ?></td>
-                        <td><?= $e['Formato_D100'] ?></td>
-                        <td><?= $e['Fecha'] ?></td>
-                        <td><?= $e['S100'] ?></td>
-                        <td><?= $e['Fecha_S100'] ?></td>
-                        <td><?= $e['FSU'] ?></td>
-                        <td><?= $e['Fecha_FSU'] ?></td>
-                        <td><?= $e['TipoDocu'] ?></td>
-                        <td><?= $e['DNI_Soli'] ?></td>
-                        <td><?= $e['Solicitante'] ?></td>
-                        <td><?= $e['Integrantes'] ?></td>
-                        <td><?= $e['Archivador'] ?></td>
-                        <td><?= $e['AÑO'] ?></td>
-                        <td><?= $e['TipoCSE'] ?></td>
-                        <td><?= $e['InicioCSE'] ?></td>
-                        <td><?= $e['FinalCSE'] ?></td>
-                        <td><?= $e['Empadronador'] ?></td>
-                        <td><?= $e['Observaciones'] ?></td>
+                        <th>ID</th>
+                        <th>Tipo Solicitud</th>
+                        <th>Tipo Remisión</th>
+                        <th>Fecha</th>
+                        <th>D100</th>
+                        <th>S100</th>
+                        <th>Fecha S100</th>
+                        <th>FSU</th>
+                        <th>Fecha FSU</th>
+                        <th>Tipo Doc</th>
+                        <th>DNI</th>
+                        <th>Solicitante</th>
+                        <th>Integrantes</th>
+                        <th>Archivador</th>
+                        <th>Año</th>
+                        <th>Tipo CSE</th>
+                        <th>Inicio CSE</th>
+                        <th>Final CSE</th>
+                        <th>Empadronador</th>
+                        <th>Observaciones</th>
                         <?php if ($_SESSION['user_type'] == 1): ?>
-                            <td>
-                                <button class="btn-editar" data-id="<?= $e['IdEmpa'] ?>">
-                                    ✏️ Editar
-                                </button>
-                            </td>
+                            <th>Acciones</th>
                         <?php endif; ?>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <?php foreach ($empadronamientos as $e): ?>
+                        <tr>
+                            <td><?= $e['IdEmpa'] ?></td>
+                            <td><?= $e['TipoSolicitud'] ?></td>
+                            <td><?= $e['TipoRemision'] ?></td>
+                            <td><?= $e['Formato_D100'] ?></td>
+                            <td><?= $e['Fecha'] ?></td>
+                            <td><?= $e['S100'] ?></td>
+                            <td><?= $e['Fecha_S100'] ?></td>
+                            <td><?= $e['FSU'] ?></td>
+                            <td><?= $e['Fecha_FSU'] ?></td>
+                            <td><?= $e['TipoDocu'] ?></td>
+                            <td><?= $e['DNI_Soli'] ?></td>
+                            <td><?= $e['Solicitante'] ?></td>
+                            <td><?= $e['Integrantes'] ?></td>
+                            <td><?= $e['Archivador'] ?></td>
+                            <td><?= $e['AÑO'] ?></td>
+                            <td><?= $e['TipoCSE'] ?></td>
+                            <td><?= $e['InicioCSE'] ?></td>
+                            <td><?= $e['FinalCSE'] ?></td>
+                            <td><?= $e['Empadronador'] ?></td>
+                            <td><?= $e['Observaciones'] ?></td>
+                            <?php if ($_SESSION['user_type'] == 1): ?>
+                                <td>
+                                    <button class="btn-editar" data-id="<?= $e['IdEmpa'] ?>">
+                                        ✏️ Editar
+                                    </button>
+                                </td>
+                            <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
 
-    <!-- MODAL DE EDICIÓN -->
-    <div id="modalEditar" class="modal">
-        <div class="modal-contenido">
+        <!-- MODAL DE EDICIÓN -->
+        <div id="modalEditar" class="modal">
+            <div class="modal-contenido">
 
-            <span class="cerrar">&times;</span>
-            <h3>Editar Empadronamiento</h3>
+                <span class="cerrar">&times;</span>
+                <h3>Editar Empadronamiento</h3>
 
-            <form id="formEditar">
+                <form id="formEditar">
 
-                <input type="hidden" name="id" id="edit_id">
+                    <input type="hidden" name="id" id="edit_id">
 
-                <label>Tipo Solicitud</label>
-                <input type="text" name="tipo_solicitud" id="edit_tipo_soli">
+                    <label>Tipo Solicitud</label>
+                    <input type="text" name="tipo_solicitud" id="edit_tipo_soli">
 
-                <label>Tipo Remisión</label>
-                <input type="text" name="tipo_remision" id="edit_tipo_remi">
+                    <label>Tipo Remisión</label>
+                    <input type="text" name="tipo_remision" id="edit_tipo_remi">
 
-                <label>DNI</label>
-                <input type="number" name="dni_solicitante" id="edit_dni">
+                    <label>DNI</label>
+                    <input type="number" name="dni_solicitante" id="edit_dni">
 
-                <label>Solicitante</label>
-                <input type="text" name="nombre_solicitante" id="edit_solicitante">
+                    <label>Solicitante</label>
+                    <input type="text" name="nombre_solicitante" id="edit_solicitante">
 
-                <label>Integrantes</label>
-                <input type="number" name="num_integrantes" id="edit_integrantes">
+                    <label>Integrantes</label>
+                    <input type="number" name="num_integrantes" id="edit_integrantes">
 
-                <label>Archivador</label>
-                <input type="number" name="num_archivador" id="edit_archivador">
+                    <label>Archivador</label>
+                    <input type="number" name="num_archivador" id="edit_archivador">
 
-                <label>Año</label>
-                <input type="number" name="anio" id="edit_anio">
+                    <label>Año</label>
+                    <input type="number" name="anio" id="edit_anio">
 
-                <label>Tipo CSE</label>
-                <select name="tipo_cse" id="edit_tipo_cse">
-                    <option>NO POBRE</option>
-                    <option>POBRE</option>
-                    <option>POBRE EXTREMO</option>
-                </select>
+                    <label>Tipo CSE</label>
+                    <select name="tipo_cse" id="edit_tipo_cse">
+                        <option>NO POBRE</option>
+                        <option>POBRE</option>
+                        <option>POBRE EXTREMO</option>
+                    </select>
 
-                <label>Empadronador</label>
-                <input type="text" name="empadronador" id="edit_empadronador">
+                    <label>Empadronador</label>
+                    <input type="text" name="empadronador" id="edit_empadronador">
 
-                <label>Observaciones</label>
-                <textarea name="observaciones" id="edit_observaciones"></textarea>
+                    <label>Observaciones</label>
+                    <textarea name="observaciones" id="edit_observaciones"></textarea>
 
-                <br>
+                    <br>
 
-                <button type="submit">Guardar cambios</button>
+                    <button type="submit">Guardar cambios</button>
 
-            </form>
+                </form>
 
+            </div>
         </div>
     </div>
 </body>
@@ -167,14 +180,17 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
     });
 </script>
 
-<!-- SCRIPT PARA EL MODAL -->
+<!-- SCRIPT PARA EL MODAL Y EDITAR REGISTRO -->
 <script>
+    // ABRIR MODAL Y CARGAR DATOS
     $(document).on("click", ".btn-editar", function() {
-
         let id = $(this).data("id");
+        const modal = $("#modalEditar");
 
-        $("#modalEditar").show();
+        // Mostrar modal
+        modal.addClass("activo");
 
+        // Obtener datos vía AJAX
         $.ajax({
             url: "../../backend/php/empa/obtener_empa.php",
             type: "GET",
@@ -183,7 +199,6 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
             },
             dataType: "json",
             success: function(data) {
-
                 $("#edit_id").val(data.IdEmpa);
                 $("#edit_tipo_soli").val(data.IdTipoSoli);
                 $("#edit_tipo_remi").val(data.IdTipoRemi);
@@ -195,38 +210,42 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
                 $("#edit_tipo_cse").val(data.TipoCSE);
                 $("#edit_empadronador").val(data.Empadronador);
                 $("#edit_observaciones").val(data.Observaciones);
-
+            },
+            error: function() {
+                alert("Error al obtener los datos del registro");
             }
         });
+    });
 
+    // CERRAR MODAL (botón X)
+    $(document).on("click", ".cerrar", function() {
+        $("#modalEditar").removeClass("activo");
     });
-</script>
-<script>
-    $(".cerrar").click(function() {
-        $("#modalEditar").hide();
+
+    // CERRAR MODAL SI HACEN CLICK FUERA DEL CONTENIDO
+    $(window).on("click", function(e) {
+        const modal = $("#modalEditar");
+        if ($(e.target).is(modal)) {
+            modal.removeClass("activo");
+        }
     });
-</script>
-<script>
+
+    // GUARDAR CAMBIOS
     $("#formEditar").submit(function(e) {
-
         e.preventDefault();
-
         $.ajax({
             url: "../../backend/php/empa/actualizar_empa.php",
             type: "POST",
             data: $(this).serialize(),
             success: function() {
-
                 alert("Registro actualizado correctamente");
-
-                $("#modalEditar").hide();
-
-                location.reload();
-
+                $("#modalEditar").removeClass("activo");
+                location.reload(); // Opcional: reemplazar con actualización de tabla sin recargar
+            },
+            error: function() {
+                alert("Error al actualizar el registro");
             }
-
         });
-
     });
 </script>
 
