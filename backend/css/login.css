@@ -174,7 +174,8 @@ label {
 }
 
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="text"] {
     width: 100%;
     background: #fafafa;
     border: 1.5px solid #ececec;

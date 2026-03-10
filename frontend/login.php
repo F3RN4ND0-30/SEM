@@ -77,13 +77,6 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <label class="remember">
-                        <input type="checkbox" name="recordar" /> Recordarme
-                    </label>
-                    <a href="#" class="forgot"></a>
-                </div>
-
                 <button type="submit" class="btn">
                     Ingresar
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

@@ -105,7 +105,7 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
                     <tr>
                         <th>ID</th>
                         <th>Tipo Solicitud</th>
-                        <th>Tipo Remisión</th>                        
+                        <th>Tipo Remisión</th>
                         <th>D100</th>
                         <th>Fecha</th>
                         <th>S100</th>
@@ -306,39 +306,42 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
             });
         });
     </script>
-
-    <!-- SCRIPT PARA EL NAVBAR -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const tableContainer = document.querySelector('.table-container');
-            const overlay = document.querySelector('.body-overlay');
-            const toggleBtn = document.getElementById('sidebarCollapse');
+            const dniInput = document.querySelector('input[name="dni_solicitante"]');
+            const nombreInput = document.querySelector('input[name="nombre_solicitante"]');
 
-            const isMobile = () => window.innerWidth <= 768;
+            dniInput.addEventListener('input', function() {
+                const dni = dniInput.value.trim();
 
-            toggleBtn.addEventListener('click', () => {
-                if (isMobile()) {
-                    // Móvil: ocultar/mostrar completamente
-                    sidebar.classList.toggle('mobile-active');
-                    overlay.classList.toggle('active');
+                if (dni.length === 8 && /^\d{8}$/.test(dni)) {
+                    fetch('../../backend/php/api/api_reniec.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                numdni: dni
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                // Concatenar y limpiar espacios extras
+                                let fullName = `${data.prenombres} ${data.apPrimer} ${data.apSegundo}`;
+                                fullName = fullName.replace(/\s+/g, ' ').trim();
+                                nombreInput.value = fullName;
+                                nombreInput.focus();
+                            } else {
+                                alert(data.message || 'No se pudo obtener el nombre del DNI');
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Error al consultar RENIEC');
+                        });
                 } else {
-                    // Desktop: colapsar ancho
-                    sidebar.classList.toggle('collapsed');
-                    tableContainer.classList.toggle('collapsed');
-                }
-            });
-
-            overlay.addEventListener('click', () => {
-                sidebar.classList.remove('mobile-active');
-                overlay.classList.remove('active');
-            });
-
-            // Ajuste automático al redimensionar ventana
-            window.addEventListener('resize', () => {
-                if (!isMobile()) {
-                    sidebar.classList.remove('mobile-active');
-                    overlay.classList.remove('active');
+                    nombreInput.value = '';
                 }
             });
         });
