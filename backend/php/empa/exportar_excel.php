@@ -11,6 +11,7 @@ ob_start();
 require_once '../../db/conexion.php';
 require_once '../../../vendor/autoload.php';
 
+date_default_timezone_set('America/Lima');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
@@ -225,6 +226,12 @@ foreach ($anchos as $ci => $ancho) {
 /* ── Freeze + AutoFiltro ── */
 $sheet->freezePane("A" . ($headerRow + 1));
 $sheet->setAutoFilter("A{$headerRow}:{$lastCol}{$headerRow}");
+/* ── Proteger hoja ── */
+$sheet->getProtection()->setSheet(true);
+$sheet->getProtection()->setSort(true);
+$sheet->getProtection()->setInsertRows(false);
+$sheet->getProtection()->setFormatCells(false);
+$sheet->getProtection()->setPassword('PISCO@2026');
 
 /* ── Hoja 2: Resumen ── */
 $resumen = $spreadsheet->createSheet();
@@ -256,9 +263,14 @@ foreach ($rStats as [$rn,$a,$b,$c,$fg,$bg]) {
         'alignment' => ['horizontal'=>Alignment::HORIZONTAL_CENTER],
     ]);
 }
+$resumen->getStyle('A2:C2')->getFont()->getColor()->setRGB('1A2332');
+$resumen->getStyle('A3:C3')->getFont()->getColor()->setRGB('1A2332');
 $resumen->getColumnDimension('A')->setWidth(20);
 $resumen->getColumnDimension('B')->setWidth(12);
 $resumen->getColumnDimension('C')->setWidth(10);
+/* ── Proteger hoja resumen ── */
+$resumen->getProtection()->setSheet(true);
+$resumen->getProtection()->setPassword('PISCO@2026');
 
 /* ══════════ ENVIAR ══════════ */
 ob_end_clean();

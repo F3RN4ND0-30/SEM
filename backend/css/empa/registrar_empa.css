@@ -191,7 +191,7 @@ body {
 .form-group label {
     font-size: .75rem;
     font-weight: 600;
-    color: var(--muted);
+    color: white;
     text-transform: uppercase;
     letter-spacing: .06em;
 }

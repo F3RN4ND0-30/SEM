@@ -14,6 +14,7 @@ $userType    = $_SESSION['user_type'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,7 +23,127 @@ $userType    = $_SESSION['user_type'] ?? '';
     <link rel="stylesheet" href="../../backend/css/navbar/navbar.css">
     <link rel="stylesheet" href="../../backend/css/sisvis/reportes.css">
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <style>
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 32px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .topbar-title {
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .topbar-title span {
+            color: var(--accent);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(200, 16, 46, 0.12);
+            color: #ff6b81;
+            letter-spacing: .04em;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px 6px 6px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #1a3a6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Ocultar sidebar en móviles por defecto */
+        @media (max-width: 768px) {
+
+            /* Overlay solo cubre el contenido, no la topbar ni el toggle */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                /* debajo del toggle */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+                pointer-events: all;
+                /* sí bloquea el contenido debajo */
+            }
+
+            /* Cuando esté activo */
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar encima del overlay */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: var(--sidebar-w);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1005;
+                /* encima del overlay */
+            }
+
+            /* Toggle siempre encima de todo */
+            .topbar-toggle {
+                z-index: 1010;
+                /* encima de sidebar y overlay */
+                position: relative;
+                /* relativo dentro de la topbar */
+            }
+        }
+
+        /* En escritorio, ocultar botón toggle */
+        @media (min-width: 769px) {
+            .topbar-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
     <?php include "../navbar/navbar.php"; ?>
@@ -44,166 +165,166 @@ $userType    = $_SESSION['user_type'] ?? '';
 
         <!-- CONTENT -->
         <div class="content">
-        <div class="reportes-page">
+            <div class="reportes-page">
 
-            <!-- ENCABEZADO -->
-            <div class="rp-head">
-                <div class="rp-head-left">
-                    <div class="rp-head-icon">📋</div>
-                    <div class="rp-head-txt">
-                        <h1>Reportes</h1>
-                        <p>Filtra y exporta los registros de empadronamiento</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FILTROS -->
-            <div class="panel filtros-panel">
-                <div class="filtros-top">
-                    <svg width="16" height="16" fill="none" stroke="#ff6b81" stroke-width="2"
-                         stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-                    </svg>
-                    <h2>Filtros de búsqueda</h2>
-                    <span class="badge-tag" id="chip-activos">0 activos</span>
-                </div>
-
-                <div class="filtros-grid">
-                    <div class="campo">
-                        <label>Fecha inicio</label>
-                        <input type="date" id="fi">
-                    </div>
-                    <div class="campo">
-                        <label>Fecha fin</label>
-                        <input type="date" id="ff">
-                    </div>
-                    <div class="campo">
-                        <label>Empadronador</label>
-                        <select id="em">
-                            <option value="">— Todos —</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label>Tipo CSE</label>
-                        <select id="tp">
-                            <option value="">— Todos —</option>
-                            <option value="NO POBRE">NO POBRE</option>
-                            <option value="POBRE">POBRE</option>
-                            <option value="POBRE EXTREMO">POBRE EXTREMO</option>
-                        </select>
+                <!-- ENCABEZADO -->
+                <div class="rp-head">
+                    <div class="rp-head-left">
+                        <div class="rp-head-icon">📋</div>
+                        <div class="rp-head-txt">
+                            <h1>Reportes</h1>
+                            <p>Filtra y exporta los registros de empadronamiento</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="filtros-acciones">
-                    <button class="btn btn-ghost" onclick="limpiar()">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <polyline points="1 4 1 10 7 10"/>
-                            <path d="M3.51 15a9 9 0 1 0 .49-3.64"/>
+                <!-- FILTROS -->
+                <div class="panel filtros-panel">
+                    <div class="filtros-top">
+                        <svg width="16" height="16" fill="none" stroke="#ff6b81" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
                         </svg>
-                        Limpiar
-                    </button>
-                    <button class="btn btn-green" id="btn-excel" onclick="exportar('excel')" disabled>
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="7 10 12 15 17 10"/>
-                            <line x1="12" y1="15" x2="12" y2="3"/>
-                        </svg>
-                        Exportar Excel
-                    </button>
-                    <button class="btn btn-red" id="btn-pdf" onclick="exportar('pdf')" disabled>
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                        </svg>
-                        Exportar PDF
-                    </button>
-                    <button class="btn btn-primary" onclick="buscar()">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <circle cx="11" cy="11" r="8"/>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                        </svg>
-                        Buscar
-                    </button>
+                        <h2>Filtros de búsqueda</h2>
+                        <span class="badge-tag" id="chip-activos">0 activos</span>
+                    </div>
+
+                    <div class="filtros-grid">
+                        <div class="campo">
+                            <label>Fecha inicio</label>
+                            <input type="date" id="fi">
+                        </div>
+                        <div class="campo">
+                            <label>Fecha fin</label>
+                            <input type="date" id="ff">
+                        </div>
+                        <div class="campo">
+                            <label>Empadronador</label>
+                            <select id="em">
+                                <option value="">— Todos —</option>
+                            </select>
+                        </div>
+                        <div class="campo">
+                            <label>Tipo CSE</label>
+                            <select id="tp">
+                                <option value="">— Todos —</option>
+                                <option value="NO POBRE">NO POBRE</option>
+                                <option value="POBRE">POBRE</option>
+                                <option value="POBRE EXTREMO">POBRE EXTREMO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filtros-acciones">
+                        <button class="btn btn-ghost" onclick="limpiar()">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <polyline points="1 4 1 10 7 10" />
+                                <path d="M3.51 15a9 9 0 1 0 .49-3.64" />
+                            </svg>
+                            Limpiar
+                        </button>
+                        <button class="btn btn-green" id="btn-excel" onclick="exportar('excel')" disabled>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            Exportar Excel
+                        </button>
+                        <button class="btn btn-red" id="btn-pdf" onclick="exportar('pdf')" disabled>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                            </svg>
+                            Exportar PDF
+                        </button>
+                        <button class="btn btn-primary" onclick="buscar()">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            Buscar
+                        </button>
+                    </div>
                 </div>
+
+                <!-- STAT CHIPS -->
+                <div class="stat-chips" id="stat-chips" style="display:none">
+                    <div class="chip blue">
+                        <div class="chip-dot"></div>
+                        <div>
+                            <div class="chip-label">Total</div>
+                            <div class="chip-value" id="s-total">0</div>
+                        </div>
+                    </div>
+                    <div class="chip green">
+                        <div class="chip-dot"></div>
+                        <div>
+                            <div class="chip-label">No Pobre</div>
+                            <div class="chip-value" id="s-nopobre">0</div>
+                        </div>
+                    </div>
+                    <div class="chip yellow">
+                        <div class="chip-dot"></div>
+                        <div>
+                            <div class="chip-label">Pobre</div>
+                            <div class="chip-value" id="s-pobre">0</div>
+                        </div>
+                    </div>
+                    <div class="chip red">
+                        <div class="chip-dot"></div>
+                        <div>
+                            <div class="chip-label">Pobre Extremo</div>
+                            <div class="chip-value" id="s-extremo">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLA -->
+                <div class="panel tabla-panel" id="tabla-panel" style="display:none">
+                    <div class="tabla-head-bar">
+                        <h3>Resultados</h3>
+                        <span class="pill blue" id="total-pill">0 registros</span>
+                    </div>
+
+                    <div class="tabla-scroll">
+                        <table class="rp-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ID</th>
+                                    <th>DNI</th>
+                                    <th>Solicitante</th>
+                                    <th>Tipo CSE</th>
+                                    <th>Tipo Solicitud</th>
+                                    <th>Integrantes</th>
+                                    <th>Archivador</th>
+                                    <th>Empadronador</th>
+                                    <th>Fecha</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="estado-vacio" id="estado-vacio" style="display:none">
+                        <div class="ev-icon">🔍</div>
+                        <h4>Sin resultados</h4>
+                        <p>No hay registros para los filtros aplicados.</p>
+                    </div>
+
+                    <div class="paginacion" id="paginacion" style="display:none">
+                        <span class="pag-info" id="pag-info"></span>
+                        <div class="pag-btns" id="pag-btns"></div>
+                    </div>
+                </div>
+
             </div>
-
-            <!-- STAT CHIPS -->
-            <div class="stat-chips" id="stat-chips" style="display:none">
-                <div class="chip blue">
-                    <div class="chip-dot"></div>
-                    <div>
-                        <div class="chip-label">Total</div>
-                        <div class="chip-value" id="s-total">0</div>
-                    </div>
-                </div>
-                <div class="chip green">
-                    <div class="chip-dot"></div>
-                    <div>
-                        <div class="chip-label">No Pobre</div>
-                        <div class="chip-value" id="s-nopobre">0</div>
-                    </div>
-                </div>
-                <div class="chip yellow">
-                    <div class="chip-dot"></div>
-                    <div>
-                        <div class="chip-label">Pobre</div>
-                        <div class="chip-value" id="s-pobre">0</div>
-                    </div>
-                </div>
-                <div class="chip red">
-                    <div class="chip-dot"></div>
-                    <div>
-                        <div class="chip-label">Pobre Extremo</div>
-                        <div class="chip-value" id="s-extremo">0</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TABLA -->
-            <div class="panel tabla-panel" id="tabla-panel" style="display:none">
-                <div class="tabla-head-bar">
-                    <h3>Resultados</h3>
-                    <span class="pill blue" id="total-pill">0 registros</span>
-                </div>
-
-                <div class="tabla-scroll">
-                    <table class="rp-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>ID</th>
-                                <th>DNI</th>
-                                <th>Solicitante</th>
-                                <th>Tipo CSE</th>
-                                <th>Tipo Solicitud</th>
-                                <th>Integrantes</th>
-                                <th>Archivador</th>
-                                <th>Empadronador</th>
-                                <th>Fecha</th>
-                                <th>Observaciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody"></tbody>
-                    </table>
-                </div>
-
-                <div class="estado-vacio" id="estado-vacio" style="display:none">
-                    <div class="ev-icon">🔍</div>
-                    <h4>Sin resultados</h4>
-                    <p>No hay registros para los filtros aplicados.</p>
-                </div>
-
-                <div class="paginacion" id="paginacion" style="display:none">
-                    <span class="pag-info" id="pag-info"></span>
-                    <div class="pag-btns" id="pag-btns"></div>
-                </div>
-            </div>
-
-        </div>
         </div><!-- /content -->
     </div><!-- /main -->
 
@@ -221,124 +342,131 @@ $userType    = $_SESSION['user_type'] ?? '';
     <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
 
     <script>
-    const API  = '../../backend/php/empa/reportes_api.php';
-    const EXPO = '../../backend/php/empa/';
+        const API = '../../backend/php/empa/reportes_api.php';
+        const EXPO = '../../backend/php/empa/';
 
-    let pagina   = 1;
-    const POR    = 25;
-    let tPags    = 1;
-    let hayDatos = false;
+        let pagina = 1;
+        const POR = 25;
+        let tPags = 1;
+        let hayDatos = false;
 
-    document.addEventListener('DOMContentLoaded', () => {
-        cargarEmpadronadores();
-        ['fi','ff','em','tp'].forEach(id =>
-            document.getElementById(id)?.addEventListener('change', actualizarChip)
-        );
-        // Cargar todos los datos al entrar
-        buscar(1);
-    });
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarEmpadronadores();
+            ['fi', 'ff', 'em', 'tp'].forEach(id =>
+                document.getElementById(id)?.addEventListener('change', actualizarChip)
+            );
+            // Cargar todos los datos al entrar
+            buscar(1);
+        });
 
-    function getFiltros() {
-        return {
-            fecha_inicio: document.getElementById('fi').value,
-            fecha_fin   : document.getElementById('ff').value,
-            empadronador: document.getElementById('em').value,
-            tipo_cse    : document.getElementById('tp').value,
-        };
-    }
+        function getFiltros() {
+            return {
+                fecha_inicio: document.getElementById('fi').value,
+                fecha_fin: document.getElementById('ff').value,
+                empadronador: document.getElementById('em').value,
+                tipo_cse: document.getElementById('tp').value,
+            };
+        }
 
-    function actualizarChip() {
-        const n = Object.values(getFiltros()).filter(Boolean).length;
-        const el = document.getElementById('chip-activos');
-        el.textContent = n + ' activo' + (n !== 1 ? 's' : '');
-        el.style.background = n > 0 ? 'rgba(200,16,46,.2)' : '';
-    }
+        function actualizarChip() {
+            const n = Object.values(getFiltros()).filter(Boolean).length;
+            const el = document.getElementById('chip-activos');
+            el.textContent = n + ' activo' + (n !== 1 ? 's' : '');
+            el.style.background = n > 0 ? 'rgba(200,16,46,.2)' : '';
+        }
 
-    async function cargarEmpadronadores() {
-        try {
-            const r = await fetch(API + '?accion=empadronadores');
-            const d = await r.json();
-            if (!d.ok) return;
-            const sel = document.getElementById('em');
-            d.lista.forEach(nombre => {
-                const o = document.createElement('option');
-                o.value = o.textContent = nombre;
-                sel.appendChild(o);
+        async function cargarEmpadronadores() {
+            try {
+                const r = await fetch(API + '?accion=empadronadores');
+                const d = await r.json();
+                if (!d.ok) return;
+                const sel = document.getElementById('em');
+                d.lista.forEach(nombre => {
+                    const o = document.createElement('option');
+                    o.value = o.textContent = nombre;
+                    sel.appendChild(o);
+                });
+            } catch {}
+        }
+
+        async function buscar(pag = 1) {
+            pagina = pag;
+            const f = getFiltros();
+
+            if (f.fecha_inicio && f.fecha_fin && f.fecha_inicio > f.fecha_fin) {
+                toast('La fecha inicio no puede ser mayor que la fecha fin.', 'err');
+                return;
+            }
+
+            showLoading('Buscando registros...');
+
+            const qs = new URLSearchParams({
+                ...f,
+                pagina,
+                por_pagina: POR
             });
-        } catch {}
-    }
 
-    async function buscar(pag = 1) {
-        pagina = pag;
-        const f = getFiltros();
+            try {
+                const [rD, rS] = await Promise.all([
+                    fetch(API + '?accion=listar&' + qs),
+                    fetch(API + '?accion=estadisticas&' + new URLSearchParams(f)),
+                ]);
+                const datos = await rD.json();
+                const stats = await rS.json();
 
-        if (f.fecha_inicio && f.fecha_fin && f.fecha_inicio > f.fecha_fin) {
-            toast('La fecha inicio no puede ser mayor que la fecha fin.', 'err');
-            return;
+                hideLoading();
+
+                if (datos.error) {
+                    toast(datos.error, 'err');
+                    return;
+                }
+
+                renderTabla(datos);
+                renderStats(stats);
+
+                tPags = datos.total_paginas;
+                hayDatos = datos.total > 0;
+
+                document.getElementById('btn-excel').disabled = !hayDatos;
+                document.getElementById('btn-pdf').disabled = !hayDatos;
+                document.getElementById('tabla-panel').style.display = 'block';
+                document.getElementById('stat-chips').style.display = 'grid';
+
+            } catch (err) {
+                hideLoading();
+                toast('Error de conexión al servidor.', 'err');
+                console.error(err);
+            }
         }
 
-        showLoading('Buscando registros...');
+        function renderTabla(data) {
+            const tbody = document.getElementById('tbody');
+            const empty = document.getElementById('estado-vacio');
+            const pag = document.getElementById('paginacion');
+            const pill = document.getElementById('total-pill');
+            const base = (pagina - 1) * POR;
 
-        const qs = new URLSearchParams({ ...f, pagina, por_pagina: POR });
+            pill.textContent = data.total.toLocaleString('es-PE') +
+                ' registro' + (data.total !== 1 ? 's' : '');
 
-        try {
-            const [rD, rS] = await Promise.all([
-                fetch(API + '?accion=listar&'       + qs),
-                fetch(API + '?accion=estadisticas&' + new URLSearchParams(f)),
-            ]);
-            const datos = await rD.json();
-            const stats = await rS.json();
+            tbody.innerHTML = '';
 
-            hideLoading();
+            if (!data.datos.length) {
+                empty.style.display = 'block';
+                pag.style.display = 'none';
+                return;
+            }
 
-            if (datos.error) { toast(datos.error, 'err'); return; }
+            empty.style.display = 'none';
+            pag.style.display = 'flex';
 
-            renderTabla(datos);
-            renderStats(stats);
+            const cseClass = {
+                'NO POBRE': 'badge-cse cse-np',
+                'POBRE': 'badge-cse cse-p',
+                'POBRE EXTREMO': 'badge-cse cse-pe',
+            };
 
-            tPags    = datos.total_paginas;
-            hayDatos = datos.total > 0;
-
-            document.getElementById('btn-excel').disabled = !hayDatos;
-            document.getElementById('btn-pdf').disabled   = !hayDatos;
-            document.getElementById('tabla-panel').style.display = 'block';
-            document.getElementById('stat-chips').style.display  = 'grid';
-
-        } catch (err) {
-            hideLoading();
-            toast('Error de conexión al servidor.', 'err');
-            console.error(err);
-        }
-    }
-
-    function renderTabla(data) {
-        const tbody = document.getElementById('tbody');
-        const empty = document.getElementById('estado-vacio');
-        const pag   = document.getElementById('paginacion');
-        const pill  = document.getElementById('total-pill');
-        const base  = (pagina - 1) * POR;
-
-        pill.textContent = data.total.toLocaleString('es-PE') +
-            ' registro' + (data.total !== 1 ? 's' : '');
-
-        tbody.innerHTML = '';
-
-        if (!data.datos.length) {
-            empty.style.display = 'block';
-            pag.style.display   = 'none';
-            return;
-        }
-
-        empty.style.display = 'none';
-        pag.style.display   = 'flex';
-
-        const cseClass = {
-            'NO POBRE'     : 'badge-cse cse-np',
-            'POBRE'        : 'badge-cse cse-p',
-            'POBRE EXTREMO': 'badge-cse cse-pe',
-        };
-
-        tbody.innerHTML = data.datos.map((r, i) => `
+            tbody.innerHTML = data.datos.map((r, i) => `
             <tr>
                 <td class="td-num">${base + i + 1}</td>
                 <td class="td-id">${esc(r.IdEmpa)}</td>
@@ -353,110 +481,122 @@ $userType    = $_SESSION['user_type'] ?? '';
                 <td class="td-obs" title="${esc(r.observaciones)}">${esc(r.observaciones)}</td>
             </tr>`).join('');
 
-        renderPaginacion(data.total, data.total_paginas);
-    }
-
-    function renderPaginacion(total, totalPags) {
-        const info = document.getElementById('pag-info');
-        const btns = document.getElementById('pag-btns');
-        const desde = (pagina - 1) * POR + 1;
-        const hasta = Math.min(pagina * POR, total);
-
-        info.textContent = `${desde}–${hasta} de ${total.toLocaleString('es-PE')}`;
-        btns.innerHTML = '';
-
-        const mkBtn = (label, disabled, onClick, active = false) => {
-            const b = document.createElement('button');
-            b.className = 'pbtn' + (active ? ' activo' : '');
-            b.textContent = label;
-            b.disabled = disabled;
-            if (onClick && !disabled) b.onclick = onClick;
-            return b;
-        };
-
-        btns.appendChild(mkBtn('‹', pagina === 1, () => buscar(pagina - 1)));
-        rango(pagina, totalPags).forEach(p => {
-            btns.appendChild(mkBtn(
-                p === '…' ? '…' : p,
-                p === '…',
-                p !== '…' ? () => buscar(p) : null,
-                p === pagina
-            ));
-        });
-        btns.appendChild(mkBtn('›', pagina === totalPags || totalPags === 0, () => buscar(pagina + 1)));
-    }
-
-    function rango(actual, total) {
-        if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-        if (actual <= 4) return [1, 2, 3, 4, 5, '…', total];
-        if (actual >= total - 3) return [1, '…', total-4, total-3, total-2, total-1, total];
-        return [1, '…', actual-1, actual, actual+1, '…', total];
-    }
-
-    function renderStats(data) {
-        if (!data.ok) return;
-        const s = data.stats;
-        countUp(document.getElementById('s-total'),   s.total);
-        countUp(document.getElementById('s-nopobre'), s.no_pobre);
-        countUp(document.getElementById('s-pobre'),   s.pobre);
-        countUp(document.getElementById('s-extremo'), s.extremo);
-    }
-
-    function countUp(el, target) {
-        const t = parseInt(target) || 0;
-        if (t === 0) { el.textContent = '0'; return; }
-        let current = 0;
-        const step = t / (1200 / 16);
-        const timer = setInterval(() => {
-            current = Math.min(current + step, t);
-            el.textContent = Math.floor(current).toLocaleString('es-PE');
-            if (current >= t) clearInterval(timer);
-        }, 16);
-    }
-
-    function exportar(tipo) {
-        if (!hayDatos) { toast('Primero realiza una búsqueda.', 'err'); return; }
-        const qs  = new URLSearchParams(getFiltros()).toString();
-        const arc = tipo === 'excel' ? 'exportar_excel.php' : 'exportar_pdf.php';
-        if (tipo === 'excel') {
-            window.location.href = EXPO + arc + '?' + qs;
-            toast('Descargando Excel...', 'ok');
-        } else {
-            window.open(EXPO + arc + '?' + qs, '_blank');
-            toast('Abriendo PDF...', 'ok');
+            renderPaginacion(data.total, data.total_paginas);
         }
-    }
 
-    function limpiar() {
-        ['fi','ff'].forEach(id => document.getElementById(id).value = '');
-        ['em','tp'].forEach(id => document.getElementById(id).selectedIndex = 0);
-        actualizarChip();
-        buscar(1); // recarga todos los datos sin filtro
-    }
+        function renderPaginacion(total, totalPags) {
+            const info = document.getElementById('pag-info');
+            const btns = document.getElementById('pag-btns');
+            const desde = (pagina - 1) * POR + 1;
+            const hasta = Math.min(pagina * POR, total);
 
-    function esc(s) {
-        if (s === null || s === undefined || s === '') return '<span style="color:#3a3f4f">—</span>';
-        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
+            info.textContent = `${desde}–${hasta} de ${total.toLocaleString('es-PE')}`;
+            btns.innerHTML = '';
 
-    function showLoading(msg) {
-        document.getElementById('loading-txt').textContent = msg || 'Cargando...';
-        document.getElementById('loading').classList.add('on');
-    }
-    function hideLoading() {
-        document.getElementById('loading').classList.remove('on');
-    }
+            const mkBtn = (label, disabled, onClick, active = false) => {
+                const b = document.createElement('button');
+                b.className = 'pbtn' + (active ? ' activo' : '');
+                b.textContent = label;
+                b.disabled = disabled;
+                if (onClick && !disabled) b.onclick = onClick;
+                return b;
+            };
 
-    function toast(msg, tipo = '') {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.className   = 'toast-msg show' + (tipo ? ' ' + tipo : '');
-        clearTimeout(t._t);
-        t._t = setTimeout(() => t.classList.remove('show'), 3000);
-    }
+            btns.appendChild(mkBtn('‹', pagina === 1, () => buscar(pagina - 1)));
+            rango(pagina, totalPags).forEach(p => {
+                btns.appendChild(mkBtn(
+                    p === '…' ? '…' : p,
+                    p === '…',
+                    p !== '…' ? () => buscar(p) : null,
+                    p === pagina
+                ));
+            });
+            btns.appendChild(mkBtn('›', pagina === totalPags || totalPags === 0, () => buscar(pagina + 1)));
+        }
 
-    document.addEventListener('keydown', ev => { if (ev.key === 'Enter') buscar(); });
+        function rango(actual, total) {
+            if (total <= 7) return Array.from({
+                length: total
+            }, (_, i) => i + 1);
+            if (actual <= 4) return [1, 2, 3, 4, 5, '…', total];
+            if (actual >= total - 3) return [1, '…', total - 4, total - 3, total - 2, total - 1, total];
+            return [1, '…', actual - 1, actual, actual + 1, '…', total];
+        }
+
+        function renderStats(data) {
+            if (!data.ok) return;
+            const s = data.stats;
+            countUp(document.getElementById('s-total'), s.total);
+            countUp(document.getElementById('s-nopobre'), s.no_pobre);
+            countUp(document.getElementById('s-pobre'), s.pobre);
+            countUp(document.getElementById('s-extremo'), s.extremo);
+        }
+
+        function countUp(el, target) {
+            const t = parseInt(target) || 0;
+            if (t === 0) {
+                el.textContent = '0';
+                return;
+            }
+            let current = 0;
+            const step = t / (1200 / 16);
+            const timer = setInterval(() => {
+                current = Math.min(current + step, t);
+                el.textContent = Math.floor(current).toLocaleString('es-PE');
+                if (current >= t) clearInterval(timer);
+            }, 16);
+        }
+
+        function exportar(tipo) {
+            if (!hayDatos) {
+                toast('Primero realiza una búsqueda.', 'err');
+                return;
+            }
+            const qs = new URLSearchParams(getFiltros()).toString();
+            const arc = tipo === 'excel' ? 'exportar_excel.php' : 'exportar_pdf.php';
+            if (tipo === 'excel') {
+                window.location.href = EXPO + arc + '?' + qs;
+                toast('Descargando Excel...', 'ok');
+            } else {
+                window.open(EXPO + arc + '?' + qs, '_blank');
+                toast('Abriendo PDF...', 'ok');
+            }
+        }
+
+        function limpiar() {
+            ['fi', 'ff'].forEach(id => document.getElementById(id).value = '');
+            ['em', 'tp'].forEach(id => document.getElementById(id).selectedIndex = 0);
+            actualizarChip();
+            buscar(1); // recarga todos los datos sin filtro
+        }
+
+        function esc(s) {
+            if (s === null || s === undefined || s === '') return '<span style="color:#3a3f4f">—</span>';
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function showLoading(msg) {
+            document.getElementById('loading-txt').textContent = msg || 'Cargando...';
+            document.getElementById('loading').classList.add('on');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('on');
+        }
+
+        function toast(msg, tipo = '') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast-msg show' + (tipo ? ' ' + tipo : '');
+            clearTimeout(t._t);
+            t._t = setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        document.addEventListener('keydown', ev => {
+            if (ev.key === 'Enter') buscar();
+        });
     </script>
 
 </body>
+
 </html>
