@@ -1,6 +1,9 @@
 <?php
 require_once "../../frontend/auth.php";
+require_once '../../backend/db/conexion.php';
 require_once '../../backend/php/empa/listar_empadronamiento.php';
+
+$empadronadores = $pdo->query("SELECT IdUsuario, Nombres, Ape_Pat, Ape_Mat FROM usuarios WHERE IdTipoUsuario = 2")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -204,7 +207,14 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
                     </select>
 
                     <label>Empadronador</label>
-                    <input type="text" name="empadronador" id="edit_empadronador">
+                    <select name="empadronador" required>
+                        <option value="">Seleccione</option>
+                        <?php foreach ($empadronadores as $emp): ?>
+                            <option value="<?= $emp['Nombres'] ?> <?= $emp['Ape_Pat'] ?> <?= $emp['Ape_Mat'] ?>">
+                                <?= $emp['Nombres'] ?> <?= $emp['Ape_Pat'] ?> <?= $emp['Ape_Mat'] ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
 
                     <label>Observaciones</label>
                     <textarea name="observaciones" id="edit_observaciones"></textarea>

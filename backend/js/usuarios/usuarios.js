@@ -77,6 +77,18 @@ $(document).ready(function () {
         if (validarFormulario("#formEditarUsuario")) actualizarUsuario();
     });
 
+    // Generar contraseña automática
+    $("#btnGenerarPass").click(function () {
+        const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+        let password = "";
+
+        for (let i = 0; i < 10; i++) {
+            password += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+
+        $("#pass").val(password).attr("type", "text");
+    });
+
     // Guardar nueva contraseña
     $("#btnGuardarPassword").click(() => {
         const nueva = $("#nueva_password").val();
