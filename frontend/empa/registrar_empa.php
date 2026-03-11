@@ -2,16 +2,13 @@
 require_once "../../frontend/auth.php";
 require_once '../../backend/db/conexion.php';
 
-// Traer opciones de la DB
 $tipoSolicitudes = $pdo->query("SELECT IdTipoSoli, Descripcion FROM tipo_solicitud")->fetchAll(PDO::FETCH_ASSOC);
-$tipoRemisiones = $pdo->query("SELECT IdTipoRemi, Descripcion FROM tipo_remision")->fetchAll(PDO::FETCH_ASSOC);
-$empadronadores = $pdo->query("SELECT IdUsuario, Nombres, Ape_Pat, Ape_Mat FROM usuarios WHERE IdTipoUsuario = 2")->fetchAll(PDO::FETCH_ASSOC);
-$anioActual = date('Y');
+$tipoRemisiones  = $pdo->query("SELECT IdTipoRemi, Descripcion FROM tipo_remision")->fetchAll(PDO::FETCH_ASSOC);
+$empadronadores  = $pdo->query("SELECT IdUsuario, Nombres, Ape_Pat, Ape_Mat FROM usuarios WHERE IdTipoUsuario = 2")->fetchAll(PDO::FETCH_ASSOC);
+$anioActual      = date('Y');
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -143,7 +140,6 @@ $anioActual = date('Y');
         }
     </style>
 </head>
-
 <body>
     <?php include "../navbar/navbar.php"; ?>
 
@@ -311,66 +307,67 @@ $anioActual = date('Y');
 
     <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
 
-    <script>
-        flatpickr(".datepicker", {
-            dateFormat: "Y-m-d"
-        });
+<script>
+// Flatpickr
+flatpickr(".datepicker", {
+    dateFormat: "Y-m-d",
+    locale: { firstDayOfWeek: 1 }
+});
 
-        document.querySelector('input[name="d100"]').addEventListener('input', function() {
-            if (this.value.length > 7) this.value = this.value.slice(0, 7);
-        });
-        document.querySelector('input[name="s100"]').addEventListener('input', function() {
-            if (this.value.length > 8) this.value = this.value.slice(0, 8);
-        });
-        document.querySelector('input[name="fsu"]').addEventListener('input', function() {
-            if (this.value.length > 8) this.value = this.value.slice(0, 8);
-        });
-        document.querySelector('input[name="dni_solicitante"]').addEventListener('input', function() {
-            if (this.value.length > 8) this.value = this.value.slice(0, 8);
-        });
-    </script>
+// Limitar dígitos
+[['d100',7],['s100',8],['fsu',8],['dni_solicitante',8]].forEach(([name, max]) => {
+    document.querySelector(`input[name="${name}"]`)?.addEventListener('input', function() {
+        if (this.value.length > max) this.value = this.value.slice(0, max);
+    });
+});
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const dniInput = document.querySelector('input[name="dni_solicitante"]');
-            const nombreInput = document.querySelector('input[name="nombre_solicitante"]');
+// RENIEC autocomplete
+document.getElementById('dniInput')?.addEventListener('input', function () {
+    const dni = this.value.trim();
+    const nombreInput = document.getElementById('nombreInput');
+    if (dni.length === 8 && /^\d{8}$/.test(dni)) {
+        fetch('../../backend/php/api/api_reniec.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ numdni: dni })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'success') {
+                nombreInput.value = `${data.prenombres} ${data.apPrimer} ${data.apSegundo}`.replace(/\s+/g, ' ').trim();
+            }
+        })
+        .catch(console.error);
+    } else {
+        nombreInput.value = '';
+    }
+});
 
-            dniInput.addEventListener('input', function() {
-                const dni = dniInput.value.trim();
+// Sidebar toggle
+const sidebar     = document.querySelector('.sidebar');
+const mainContent = document.getElementById('mainContent');
+const overlay     = document.querySelector('.body-overlay');
+const isMobile    = () => window.innerWidth <= 768;
 
-                if (dni.length === 8 && /^\d{8}$/.test(dni)) {
-                    fetch('../../backend/php/api/api_reniec.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                numdni: dni
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                // Concatenar y limpiar espacios extras
-                                let fullName = `${data.prenombres} ${data.apPrimer} ${data.apSegundo}`;
-                                fullName = fullName.replace(/\s+/g, ' ').trim();
-                                nombreInput.value = fullName;
-                                nombreInput.focus();
-                            } else {
-                                alert(data.message || 'No se pudo obtener el nombre del DNI');
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            alert('Error al consultar RENIEC');
-                        });
-                } else {
-                    nombreInput.value = '';
-                }
-            });
-        });
-    </script>
-
+document.getElementById('sidebarCollapse').addEventListener('click', () => {
+    if (isMobile()) {
+        sidebar.classList.toggle('mobile-active');
+        overlay.classList.toggle('active');
+    } else {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('collapsed');
+    }
+});
+overlay.addEventListener('click', () => {
+    sidebar.classList.remove('mobile-active');
+    overlay.classList.remove('active');
+});
+window.addEventListener('resize', () => {
+    if (!isMobile()) {
+        sidebar.classList.remove('mobile-active');
+        overlay.classList.remove('active');
+    }
+});
+</script>
 </body>
-
 </html>
