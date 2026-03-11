@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,17 +9,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
     <link rel="icon" type="image/png" href="../backend/img/logoPisco.png" />
 </head>
+
 <body>
 
     <div class="top-bar">
-        <div></div><div></div><div></div>
+        <div></div>
+        <div></div>
+        <div></div>
     </div>
 
     <div class="wrapper">
 
         <div class="brand">
             <div class="brand-flag">
-                <div></div><div></div><div></div>
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
             <span class="brand-name">Sistema Municipal</span>
         </div>
@@ -50,11 +56,18 @@
                     <div class="input-wrap">
                         <span class="icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                <polyline points="22,6 12,13 2,6"/>
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
                             </svg>
                         </span>
-                        <input type="email" id="correo" name="correo" placeholder="Tu correo" autocomplete="username" />
+                        <input
+                            type="email"
+                            id="correo"
+                            name="correo"
+                            placeholder="Tu correo"
+                            autocomplete="username"
+                            pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
+                            title="Ingrese un correo válido sin caracteres especiales como ñ o /" />
                     </div>
                 </div>
 
@@ -103,11 +116,29 @@
             const input = document.getElementById('pass');
             const isPass = input.type === 'password';
             input.type = isPass ? 'text' : 'password';
-            btn.querySelector('svg').innerHTML = isPass
-                ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`
-                : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+            btn.querySelector('svg').innerHTML = isPass ?
+                `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>` :
+                `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
         }
+
+        document.getElementById("correo").addEventListener("input", function() {
+            // Guardamos el valor original
+            let val = this.value;
+
+            // Eliminamos caracteres no permitidos (solo letras ASCII, números, ., _, -, + y @)
+            val = val.replace(/[^a-zA-Z0-9._%+\-@]/g, "");
+
+            // Permitimos solo UN @
+            const parts = val.split("@");
+            if (parts.length > 2) {
+                // Si hay más de un @, unimos todo menos los extras
+                val = parts[0] + "@" + parts.slice(1).join("").replace(/@/g, "");
+            }
+
+            this.value = val;
+        });
     </script>
 
 </body>
+
 </html>

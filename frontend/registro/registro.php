@@ -306,6 +306,20 @@ if (!isset($_SESSION['user_id'])) {
             const apeMatInput = document.getElementById('ape_mat');
             const correoInput = document.getElementById('correo');
 
+            function generarCorreo(primerNombre, primerApellido) {
+                const nombre = primerNombre
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/ñ/gi, 'n');
+
+                const apellido = primerApellido
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/ñ/gi, 'n');
+
+                return (nombre[0] + apellido).toLowerCase() + '@sem.gob.pe';
+            }
+
             dniInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -331,20 +345,17 @@ if (!isset($_SESSION['user_id'])) {
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === 'success') {
-                            // Nombres
                             let fullName = `${data.prenombres}`.replace(/\s+/g, ' ').trim();
                             nombresInput.value = fullName;
                             nombresInput.focus();
 
-                            // Apellidos separados
                             apePatInput.value = data.apPrimer || '';
                             apeMatInput.value = data.apSegundo || '';
 
-                            // Autocompletar correo si no tiene '@'
                             if (!correoInput.value.includes('@')) {
                                 const primerNombre = data.prenombres.split(' ')[0];
                                 const primerApellido = data.apPrimer.split(' ')[0];
-                                correoInput.value = (primerNombre[0] + primerApellido).toLowerCase() + '@sem.gob.pe';
+                                correoInput.value = generarCorreo(primerNombre, primerApellido);
                             }
                         } else {
                             nombresInput.value = '';

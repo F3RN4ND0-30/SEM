@@ -1,7 +1,7 @@
 <?php
 // backend/php/login_process.php
 session_start();
-require_once __DIR__ . '/../db/conexion.php'; // ✅ ruta absoluta desde este archivo
+require_once __DIR__ . '/../db/conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -9,11 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pass   = $_POST['pass'] ?? '';
 
     if (empty($correo) || empty($pass)) {
-        header("Location: ../../frontend/login.php?error=campos"); // ✅ ruta corregida
+        header("Location: ../../frontend/login.php?error=campos");
         exit;
     }
 
-    if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+    // Validar correo solo ASCII y sin caracteres especiales como ñ o /
+    if (!preg_match('/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/', $correo)) {
         header("Location: ../../frontend/login.php?error=correo");
         exit;
     }
@@ -41,16 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Seguridad: regenerar ID de sesión
     session_regenerate_id(true);
 
-    // Guardar datos en sesión
     $_SESSION['user_id']    = $user['IdUsuario'];
     $_SESSION['user_name']  = $user['Nombres'] . ' ' . $user['Ape_Pat'] . ' ' . $user['Ape_Mat'];
     $_SESSION['user_type']  = $user['IdTipoUsuario'];
     $_SESSION['user_email'] = $user['Correo'];
     $_SESSION['login_time'] = time();
 
-    header("Location: ../../frontend/sisvis/escritorio.php"); // ✅ ruta corregida
+    header("Location: ../../frontend/sisvis/escritorio.php");
     exit;
 }

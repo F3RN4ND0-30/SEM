@@ -1,10 +1,10 @@
 <?php
 
-/**
- * Exportar PDF — SEM
- * Ruta: backend/php/empa/exportar_pdf.php
- * HTML imprimible → el navegador guarda como PDF.
- */
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+$usuarioActual = $_SESSION['user_name'] ?? 'Desconocido';
 
 require_once '../../db/conexion.php';
 
@@ -470,7 +470,10 @@ $periodo = match (true) {
     </div>
     <div class="cab-der">
       <div class="titulo">Reporte de Empadronamientos</div>
-      <div class="meta"><?= esc($periodo) ?> &nbsp;·&nbsp; <?= date('d/m/Y H:i') ?></div>
+      <div class="meta">
+        <?= esc($periodo) ?> &nbsp;·&nbsp; <?= date('d/m/Y H:i') ?><br>
+        Usuario: <?= esc($usuarioActual) ?>
+      </div>
     </div>
   </div>
 
@@ -483,6 +486,7 @@ $periodo = match (true) {
     <?php if ($tp): ?>
       <div class="f-chip"><span class="lbl">Tipo CSE:</span> <?= esc($tp) ?></div>
     <?php endif; ?>
+    <div class="f-chip"><span class="lbl">Usuario:</span> <?= esc($usuarioActual) ?></div>
   </div>
 
   <!-- STATS -->
