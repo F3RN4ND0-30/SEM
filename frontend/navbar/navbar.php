@@ -1,5 +1,12 @@
-<?php $currentPage = basename($_SERVER['PHP_SELF']); ?>
-<aside class="sidebar">
+<?php
+
+$currentPage = basename($_SERVER['PHP_SELF']);
+// --- Datos del usuario en sesión ---
+$userName     = $_SESSION['user_name']  ?? 'Usuario';
+$userInitial  = strtoupper(substr($userName, 0, 1));
+$userType     = $_SESSION['user_type']  ?? '';
+?>
+<aside class="sidebar" id="sidebar">
     <!-- Logo -->
     <div class="logo">
         <div class="logo-flag">
@@ -32,7 +39,7 @@
         Empadronamiento
     </a>
 
-    <a class="nav-item <?php echo ($currentPage == 'listar_empa.php') ? 'active' : ''; ?>" href="../empa/listar_empa.php">
+    <a class="nav-item <?php echo ($currentPage == 'listado_empa.php') ? 'active' : ''; ?>" href="../empa/listar_empa.php">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="8" y1="6" x2="21" y2="6" />
             <line x1="8" y1="12" x2="21" y2="12" />
@@ -44,28 +51,19 @@
         Listado
     </a>
 
-    <a class="nav-item <?php echo ($currentPage == 'reportes.php') ? 'active' : ''; ?>" href="reportes.php">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="4" y1="19" x2="4" y2="10" />
-            <line x1="12" y1="19" x2="12" y2="4" />
-            <line x1="20" y1="19" x2="20" y2="14" />
-            <path d="M4 10a4 4 0 0 1 8 0" />
-            <path d="M12 4a4 4 0 0 1 8 0" />
-        </svg>
-        Reportes
-    </a>
+    <?php if ($userType === 1): ?>
+        <a class="nav-item <?php echo ($currentPage == 'usuarios.php') ? 'active' : ''; ?>" href="../registro/registro.php">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="7" r="4" />
+                <path d="M17 11v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            Usuarios
+        </a>
+    <?php endif; ?>
 
-    <a class="nav-item <?php echo ($currentPage == 'usuarios.php') ? 'active' : ''; ?>" href="usuarios.php">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="9" cy="7" r="4" />
-            <path d="M17 11v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6" />
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-        Usuarios
-    </a>
-
-    <a class="nav-item <?php echo ($currentPage == 'configuracion.php') ? 'active' : ''; ?>" href="configuracion.php">
+    <a class="nav-item <?php echo ($currentPage == 'configuracion.php') ? 'active' : ''; ?>" href="../usuario/config.php">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3" />
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />

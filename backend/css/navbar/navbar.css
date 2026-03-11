@@ -24,15 +24,6 @@
     padding: 0;
 }
 
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    overflow: hidden;
-}
-
 /* ── SIDEBAR ── */
 .sidebar {
     width: var(--sidebar-w);
@@ -813,3 +804,4 @@ body {
     background: var(--surface2);
     border-radius: 4px;
 }
+

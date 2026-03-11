@@ -6,6 +6,7 @@
     <title>Inicio de Sesión - SEM</title>
     <link rel="stylesheet" href="../backend/css/login.css" /> <!-- ✅ ruta correcta -->
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="../backend/img/logoPisco.png" />
 </head>
 <body>
 
@@ -19,7 +20,7 @@
             <div class="brand-flag">
                 <div></div><div></div><div></div>
             </div>
-            <span class="brand-name">Sistema Nacional</span>
+            <span class="brand-name">Sistema Municipal</span>
         </div>
 
         <div class="card">
@@ -76,13 +77,6 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <label class="remember">
-                        <input type="checkbox" name="recordar" /> Recordarme
-                    </label>
-                    <a href="#" class="forgot"></a>
-                </div>
-
                 <button type="submit" class="btn">
                     Ingresar
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -94,7 +88,7 @@
             </form>
 
             <div class="foot-note">
-                ¿No tienes cuenta? <a href="registro/registro.php">Registrarse</a> <!-- ✅ ruta corregida -->
+                ¿No tienes cuenta? Comunicate con el area de sistemas
             </div>
         </div>
 

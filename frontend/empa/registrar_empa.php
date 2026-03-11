@@ -12,225 +12,300 @@ $anioActual      = date('Y');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Registrar Empadronamiento — SEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../backend/css/empa/registrar_empa.css">
-    <link rel="stylesheet" href="../../backend/css/sisvis/escritorio.css">
-    <!-- Flatpickr -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <title>Registrar Empadronamiento</title>
+    <link rel="stylesheet" href="../../backend/css/empa/registrar_empa.css" />
+    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <style>
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 32px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .topbar-title {
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .topbar-title span {
+            color: var(--accent);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(200, 16, 46, 0.12);
+            color: #ff6b81;
+            letter-spacing: .04em;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px 6px 6px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #1a3a6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Ocultar sidebar en móviles por defecto */
+        @media (max-width: 768px) {
+
+            /* Overlay solo cubre el contenido, no la topbar ni el toggle */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                /* debajo del toggle */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+                pointer-events: all;
+                /* sí bloquea el contenido debajo */
+            }
+
+            /* Cuando esté activo */
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar encima del overlay */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: var(--sidebar-w);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1005;
+                /* encima del overlay */
+            }
+
+            /* Toggle siempre encima de todo */
+            .topbar-toggle {
+                z-index: 1010;
+                /* encima de sidebar y overlay */
+                position: relative;
+                /* relativo dentro de la topbar */
+            }
+        }
+
+        /* En escritorio, ocultar botón toggle */
+        @media (min-width: 769px) {
+            .topbar-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
+    <?php include "../navbar/navbar.php"; ?>
 
-<div class="body-overlay"></div>
+    <div class="main">
 
-<!-- ══ SIDEBAR ══ -->
-<?php include "../navbar/navbar.php"; ?>
-
-<!-- ══ MAIN ══ -->
-<div class="form-wrapper" id="mainContent">
-
-    <!-- TOPBAR -->
-    <header class="topbar">
-        <button class="topbar-toggle" id="sidebarCollapse" aria-label="Toggle sidebar">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <line x1="3" y1="12" x2="21" y2="12"/>
-                <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-        </button>
-        <a href="listar_empa.php" class="topbar-back">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="15 18 9 12 15 6"/>
-            </svg>
-            Volver
-        </a>
-        <div class="topbar-title">Nuevo <span>Empadronamiento</span></div>
-    </header>
-
-    <!-- CONTENT -->
-    <div class="content">
-        <div class="form-card">
-
-            <!-- HEADER -->
-            <div class="form-card-header">
-                <div class="form-card-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="12" y1="18" x2="12" y2="12"/>
-                        <line x1="9" y1="15" x2="15" y2="15"/>
-                    </svg>
-                </div>
-                <div>
-                    <div class="form-card-title">Registrar Empadronamiento</div>
-                    <div class="form-card-sub">Complete todos los campos para registrar un nuevo hogar empadronado</div>
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <button id="toggleSidebar" class="topbar-toggle">☰</button>
+            <div class="topbar-title">Registro de <span>Empadronamiento</span></div>
+            <div class="topbar-right">
+                <span class="badge-tag">En vivo</span>
+                <div class="user-chip">
+                    <div class="user-avatar"><?= htmlspecialchars($userInitial) ?></div>
+                    <?= htmlspecialchars($userName) ?>
                 </div>
             </div>
+        </header>
 
-            <!-- BODY -->
+        <div class="form-container">
             <form action="../../backend/php/empa/guardar_empa.php" method="POST">
-            <div class="form-card-body">
 
-                <!-- §1 Clasificación de solicitud -->
-                <div class="form-section">
-                    <div class="section-title">Clasificación de solicitud</div>
-                    <div class="fg-2">
-                        <div class="form-group">
-                            <label>Tipo de Solicitud</label>
-                            <select name="tipo_solicitud" required>
-                                <option value="">Seleccione</option>
-                                <?php foreach ($tipoSolicitudes as $ts): ?>
-                                    <option value="<?= $ts['IdTipoSoli'] ?>"><?= htmlspecialchars($ts['Descripcion']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Tipo de Remisión</label>
-                            <select name="tipo_remision" required>
-                                <option value="">Seleccione</option>
-                                <?php foreach ($tipoRemisiones as $tr): ?>
-                                    <option value="<?= $tr['IdTipoRemi'] ?>"><?= htmlspecialchars($tr['Descripcion']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
+                <div class="form-grid">
+
+                    <!-- Tipo Solicitud -->
+                    <div class="form-group">
+                        <label>Tipo de Solicitud</label>
+                        <select name="tipo_solicitud" required>
+                            <option value="">Seleccione</option>
+                            <?php foreach ($tipoSolicitudes as $ts): ?>
+                                <option value="<?= $ts['IdTipoSoli'] ?>"><?= $ts['Descripcion'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
+
+                    <!-- Tipo Remision -->
+                    <div class="form-group">
+                        <label>Tipo de Remisión</label>
+                        <select name="tipo_remision" required>
+                            <option value="">Seleccione</option>
+                            <?php foreach ($tipoRemisiones as $tr): ?>
+                                <option value="<?= $tr['IdTipoRemi'] ?>"><?= $tr['Descripcion'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- D100 ancho completo -->
+                    <div class="form-group span-2">
+                        <label>Formato D100</label>
+                        <input type="number" name="d100" required>
+                    </div>
+
+                    <!-- S100 -->
+                    <div class="form-group">
+                        <label>S100</label>
+                        <input type="number" name="s100" required>
+                    </div>
+
+                    <!-- Fecha S100 -->
+                    <div class="form-group">
+                        <label>Fecha S100</label>
+                        <input type="text" class="datepicker" name="fecha_s100" required>
+                    </div>
+
+                    <!-- FSU -->
+                    <div class="form-group">
+                        <label>FSU</label>
+                        <input type="number" name="fsu" required>
+                    </div>
+
+                    <!-- Fecha FSU -->
+                    <div class="form-group">
+                        <label>Fecha FSU</label>
+                        <input type="text" class="datepicker" name="fecha_fsu" required>
+                    </div>
+
+                    <!-- Tipo Documento -->
+                    <div class="form-group">
+                        <label>Tipo Documento</label>
+                        <select name="tipo_doc" required>
+                            <option value="">Seleccione</option>
+                            <option value="DNI">DNI</option>
+                            <option value="CE">CE</option>
+                        </select>
+                    </div>
+
+                    <!-- DNI -->
+                    <div class="form-group">
+                        <label>DNI del Solicitante</label>
+                        <input type="number" name="dni_solicitante" required>
+                    </div>
+
+                    <!-- Nombre ancho completo -->
+                    <div class="form-group span-2">
+                        <label>Nombre del Solicitante</label>
+                        <input type="text" name="nombre_solicitante" required>
+                    </div>
+
+                    <!-- Integrantes -->
+                    <div class="form-group">
+                        <label>Número de Integrantes</label>
+                        <input type="number" name="num_integrantes" required>
+                    </div>
+
+                    <!-- Archivador -->
+                    <div class="form-group">
+                        <label>Número de Archivador</label>
+                        <input type="number" name="num_archivador" required>
+                    </div>
+
+                    <!-- Año -->
+                    <div class="form-group">
+                        <label>Año</label>
+                        <input type="number" name="anio" value="<?= $anioActual ?>" required>
+                    </div>
+
+                    <!-- Tipo CSE -->
+                    <div class="form-group">
+                        <label>Tipo de CSE</label>
+                        <select name="tipo_cse" required>
+                            <option value="">Seleccione</option>
+                            <option value="NO POBRE">NO POBRE</option>
+                            <option value="POBRE">POBRE</option>
+                            <option value="POBRE EXTREMO">POBRE EXTREMO</option>
+                        </select>
+                    </div>
+
+                    <!-- Fecha inicio -->
+                    <div class="form-group">
+                        <label>Fecha Inicio CSE</label>
+                        <input type="text" class="datepicker" name="fecha_inicio_cse" required>
+                    </div>
+
+                    <!-- Fecha fin -->
+                    <div class="form-group">
+                        <label>Fecha Fin CSE</label>
+                        <input type="text" class="datepicker" name="fecha_fin_cse" required>
+                    </div>
+
+                    <!-- Empadronador -->
+                    <div class="form-group span-2">
+                        <label>Empadronador</label>
+                        <select name="empadronador" required>
+                            <option value="">Seleccione</option>
+                            <?php foreach ($empadronadores as $emp): ?>
+                                <option value="<?= $emp['Nombres'] ?> <?= $emp['Ape_Pat'] ?> <?= $emp['Ape_Mat'] ?>">
+                                    <?= $emp['Nombres'] ?> <?= $emp['Ape_Pat'] ?> <?= $emp['Ape_Mat'] ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Observaciones ancho completo -->
+                    <div class="form-group span-2">
+                        <label>Observaciones</label>
+                        <textarea name="observaciones" rows="3"></textarea>
+                    </div>
+
                 </div>
 
-                <!-- §2 Formatos y fechas -->
-                <div class="form-section">
-                    <div class="section-title">Formatos y fechas</div>
-                    <div class="fg-3">
-                        <div class="form-group">
-                            <label>Formato D100</label>
-                            <input type="number" name="d100" required placeholder="Ej: 3605226">
-                        </div>
-                        <div class="form-group">
-                            <label>S100</label>
-                            <input type="number" name="s100" required placeholder="Ej: 16678028">
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha S100</label>
-                            <input type="text" class="datepicker" name="fecha_s100" required placeholder="AAAA-MM-DD">
-                        </div>
-                        <div class="form-group">
-                            <label>FSU</label>
-                            <input type="number" name="fsu" required placeholder="Ej: 25997199">
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha FSU</label>
-                            <input type="text" class="datepicker" name="fecha_fsu" required placeholder="AAAA-MM-DD">
-                        </div>
-                        <div class="form-group">
-                            <label>Año</label>
-                            <input type="number" name="anio" value="<?= $anioActual ?>" required>
-                        </div>
-                    </div>
-                </div>
+                <button type="submit" class="btn-submit">Registrar</button>
 
-                <!-- §3 Datos del solicitante -->
-                <div class="form-section">
-                    <div class="section-title">Datos del solicitante</div>
-                    <div class="fg-2">
-                        <div class="form-group">
-                            <label>Tipo Documento</label>
-                            <select name="tipo_doc" required>
-                                <option value="">Seleccione</option>
-                                <option value="DNI">DNI</option>
-                                <option value="CE">CE</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>DNI del Solicitante</label>
-                            <input type="number" name="dni_solicitante" id="dniInput" required placeholder="8 dígitos">
-                        </div>
-                    </div>
-                    <div class="fg-1 mt-s">
-                        <div class="form-group">
-                            <label>Nombre del Solicitante</label>
-                            <input type="text" name="nombre_solicitante" id="nombreInput" required placeholder="Se completa automáticamente con el DNI">
-                        </div>
-                    </div>
-                    <div class="fg-2 mt-s">
-                        <div class="form-group">
-                            <label>N° de Integrantes</label>
-                            <input type="number" name="num_integrantes" required placeholder="Ej: 4" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label>N° de Archivador</label>
-                            <input type="number" name="num_archivador" required placeholder="Ej: 1">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- §4 Clasificación CSE -->
-                <div class="form-section">
-                    <div class="section-title">Clasificación socioeconómica (CSE)</div>
-                    <div class="fg-3">
-                        <div class="form-group">
-                            <label>Tipo de CSE</label>
-                            <select name="tipo_cse" required>
-                                <option value="">Seleccione</option>
-                                <option value="NO POBRE">NO POBRE</option>
-                                <option value="POBRE">POBRE</option>
-                                <option value="POBRE EXTREMO">POBRE EXTREMO</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha Inicio CSE</label>
-                            <input type="text" class="datepicker" name="fecha_inicio_cse" required placeholder="AAAA-MM-DD">
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha Fin CSE</label>
-                            <input type="text" class="datepicker" name="fecha_fin_cse" required placeholder="AAAA-MM-DD">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- §5 Asignación -->
-                <div class="form-section">
-                    <div class="section-title">Asignación y observaciones</div>
-                    <div class="fg-1">
-                        <div class="form-group">
-                            <label>Empadronador</label>
-                            <select name="empadronador" required>
-                                <option value="">Seleccione un empadronador</option>
-                                <?php foreach ($empadronadores as $emp):
-                                    $full = trim($emp['Nombres'] . ' ' . $emp['Ape_Pat'] . ' ' . $emp['Ape_Mat']);
-                                ?>
-                                    <option value="<?= htmlspecialchars($full) ?>"><?= htmlspecialchars($full) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="fg-1 mt-s">
-                        <div class="form-group">
-                            <label>Observaciones <span class="opt">(opcional)</span></label>
-                            <textarea name="observaciones" rows="3" placeholder="Notas adicionales sobre el empadronamiento…"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-            </div><!-- /form-card-body -->
-
-            <!-- FOOTER -->
-            <div class="form-card-footer">
-                <a href="listar_empa.php" class="btn-cancel">Cancelar</a>
-                <button type="submit" class="btn-submit">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                        <polyline points="17 21 17 13 7 13 7 21"/>
-                        <polyline points="7 3 7 8 15 8"/>
-                    </svg>
-                    Guardar registro
-                </button>
-            </div>
             </form>
+        </div>
+    </div>
 
-        </div><!-- /form-card -->
-    </div><!-- /content -->
-</div><!-- /form-wrapper -->
+    <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
 
 <script>
 // Flatpickr

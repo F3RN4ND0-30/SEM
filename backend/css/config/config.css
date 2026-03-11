@@ -109,145 +109,85 @@ body {
     color: #fff;
 }
 
-/* ───────── CONTENEDOR ───────── */
-/* Contenedor y tarjeta */
-.container-fluid {
-    background-color: #0d0f14;
-    /* fondo oscuro */
-    color: #e8eaf0;
-    /* texto claro */
+/* ───────── CONTENEDOR Y TARJETA ───────── */
+.container {
     min-height: 80vh;
+    padding: 30px 15px;
 }
 
-.card {
-    background-color: #13161e;
-    /* tono oscuro para la tarjeta */
-    border-radius: 8px;
+.cuenta-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--surface);
+    border-radius: 10px;
     border: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 16px var(--shadow);
+    color: var(--text);
 }
 
-/* Header de la tarjeta */
-.card-header {
-    background-color: #1a1e2a !important;
-    color: #e8eaf0 !important;
+.cuenta-card h4,
+.cuenta-card h5 {
+    font-weight: 600;
+}
+
+.cuenta-card h5 i {
+    vertical-align: middle;
+}
+
+hr {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ───────── AVATAR ───────── */
+.cuenta-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 2rem;
     font-weight: 700;
-    font-size: 1.25rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Botón Nuevo Usuario */
-.btn-light {
-    background-color: #C8102E !important;
-    color: #e8eaf0 !important;
-    border: 1px solid #444;
-}
-
-.btn-light:hover {
-    background-color: #3a3f51 !important;
-    color: #fff !important;
-}
-
-/* Tabla general */
-table.dataTable,
-table.dataTable th,
-table.dataTable td {
-    background-color: #1a1e2a !important;
-    color: #e8eaf0 !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-/* Header de tabla */
-table.dataTable thead th {
-    background-color: transparent !important;
-    /* elimina azul predeterminado */
-    color: #C8102E !important;
-    /* color rojo accent para encabezados */
-    border-bottom: 2px solid #C8102E !important;
+/* ───────── FORMULARIOS E INPUTS ───────── */
+.cuenta-card .form-control {
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.92rem;
 }
 
-/* Filas alternas */
-table.dataTable tbody tr:nth-child(odd) {
-    background-color: #222831 !important;
+.cuenta-card .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(200, 16, 46, 0.25);
 }
 
-table.dataTable tbody tr:nth-child(even) {
-    background-color: #1a1e2a !important;
-}
-
-/* Hover en filas */
-table.dataTable tbody tr:hover {
-    background-color: #2a2e3e !important;
-}
-
-/* Botones de acción: iconos con fondo oscuro y color */
-.btn-accion {
-    border: 1px solid #C8102E;
-    background-color: transparent;
-    color: #C8102E;
-    padding: 4px 6px;
-    margin: 0 2px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-accion:hover {
-    background-color: #C8102E;
+.cuenta-card button.btn-primary {
+    background: var(--accent);
+    border: 1px solid var(--accent);
     color: #fff;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
-/* Material icons dentro de botones de acción */
-.btn-accion i.material-icons {
-    font-size: 18px;
+.cuenta-card button.btn-primary:hover {
+    background: #a70b1f;
+    border-color: #a70b1f;
 }
 
-/* Ajustes paginación */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    background: transparent !important;
-    border: 1px solid #444 !important;
-    color: #e8eaf0 !important;
-    border-radius: 4px;
-    padding: 5px 10px;
-    margin: 0 2px;
+/* ───────── ALERTS ───────── */
+#alertaCuenta .alert {
+    font-size: 0.9rem;
+    border-radius: 6px;
 }
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background-color: #C8102E !important;
-    color: white !important;
-}
-
-/* Inputs de búsqueda y select */
-.dataTables_filter input,
-.dataTables_length select {
-    background-color: #222831;
-    border: 1px solid #444;
-    color: #e8eaf0;
-    border-radius: 4px;
-    padding: 5px 8px;
-}
-
-/* Ajuste de la barra lateral y topbar para que combinen (opcional) */
-.topbar {
-    background-color: #13161e;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: #e8eaf0;
-}
-
-/* Otros detalles para texto */
-.badge-tag {
-    background-color: #C8102E;
-    color: white;
-    font-weight: 700;
-}
-
-.user-chip {
-    background-color: #222831;
-    color: #e8eaf0;
-}
-
-/* Para que los botones de acción tengan la clase btn-accion */
 
 /* ───────── MODALES ───────── */
 .modal-content {
@@ -282,28 +222,6 @@ table.dataTable tbody tr:hover {
     width: 100%;
 }
 
-.modal-body textarea {
-    resize: vertical;
-}
-
-.modal-footer {
-    border-top: 1px solid var(--border);
-}
-
-/* Scroll en modales grandes */
-.modal-dialog {
-    max-height: 80vh;
-    display: flex;
-    align-items: center;
-}
-
-.modal-body {
-    overflow-y: auto;
-    max-height: 60vh;
-    padding-right: 1rem;
-}
-
-/* Input group para contraseña */
 .input-group .form-control {
     border-radius: 6px 0 0 6px;
 }
@@ -312,16 +230,14 @@ table.dataTable tbody tr:hover {
     border-radius: 0 6px 6px 0;
 }
 
-/* ───────── RESPONSIVE ───────── */
-@media(max-width: 768px) {
-    .modal-dialog {
-        width: 95%;
-    }
+.modal-footer {
+    border-top: 1px solid var(--border);
+}
 
-    #tablaUsuarios th,
-    #tablaUsuarios td {
-        font-size: 0.85rem;
-        padding: 6px 8px;
+/* ───────── RESPONSIVE ───────── */
+@media (max-width: 768px) {
+    .cuenta-card {
+        margin: 20px 10px;
     }
 }
 

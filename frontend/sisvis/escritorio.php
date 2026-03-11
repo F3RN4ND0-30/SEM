@@ -49,12 +49,68 @@ $usuariosActivos = (int)$stmtUsers->fetchColumn();
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Escritorio — SEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../backend/css/sisvis/escritorio.css">
 
     <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <style>
+        /* Ocultar sidebar en móviles por defecto */
+        @media (max-width: 768px) {
+
+            /* Overlay solo cubre el contenido, no la topbar ni el toggle */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                /* debajo del toggle */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+                pointer-events: all;
+                /* sí bloquea el contenido debajo */
+            }
+
+            /* Cuando esté activo */
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar encima del overlay */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: var(--sidebar-w);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1005;
+                /* encima del overlay */
+            }
+
+            /* Toggle siempre encima de todo */
+            .topbar-toggle {
+                z-index: 1010;
+                /* encima de sidebar y overlay */
+                position: relative;
+                /* relativo dentro de la topbar */
+            }
+        }
+
+        /* En escritorio, ocultar botón toggle */
+        @media (min-width: 769px) {
+            .topbar-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -69,7 +125,17 @@ $usuariosActivos = (int)$stmtUsers->fetchColumn();
     <div class="main">
 
         <!-- TOPBAR -->
-        <?php include "../topbar/topbar.php"; ?>
+        <header class="topbar">
+            <button id="toggleSidebar" class="topbar-toggle">☰</button>
+            <div class="topbar-title">Panel de <span>Empadronamiento</span></div>
+            <div class="topbar-right">
+                <span class="badge-tag">En vivo</span>
+                <div class="user-chip">
+                    <div class="user-avatar"><?= htmlspecialchars($userInitial) ?></div>
+                    <?= htmlspecialchars($userName) ?>
+                </div>
+            </div>
+        </header>
 
         <!-- CONTENT -->
         <div class="content">
@@ -79,21 +145,21 @@ $usuariosActivos = (int)$stmtUsers->fetchColumn();
                 <div class="chip green">
                     <div class="chip-dot"></div>
                     <div>
-                        <div class="chip-label">No Pobres</div>
+                        <div class="chip-label">NO POBRE</div>
                         <div class="chip-value" data-count="<?= $totalNoPobre ?>">000</div>
                     </div>
                 </div>
                 <div class="chip yellow">
                     <div class="chip-dot"></div>
                     <div>
-                        <div class="chip-label">Pobres</div>
+                        <div class="chip-label">POBRE</div>
                         <div class="chip-value" data-count="<?= $totalPobre ?>">000</div>
                     </div>
                 </div>
                 <div class="chip red">
                     <div class="chip-dot"></div>
                     <div>
-                        <div class="chip-label">Pobre Extremo</div>
+                        <div class="chip-label">POBRE EXTREMO</div>
                         <div class="chip-value" data-count="<?= $totalExtremo ?>">000</div>
                     </div>
                 </div>
@@ -211,6 +277,8 @@ $usuariosActivos = (int)$stmtUsers->fetchColumn();
             </div><!-- /grid -->
         </div><!-- /content -->
     </div><!-- /main -->
+
+    <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
 
     <script>
         window.addEventListener('load', () => {

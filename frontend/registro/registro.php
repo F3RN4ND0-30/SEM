@@ -1,223 +1,362 @@
 <?php
-// frontend/registro/registro.php
+// frontend/sisvis/escritorio.php
 session_start();
-require_once __DIR__ . '/../../backend/php/registro/registro_process.php'; // ✅ ruta absoluta
-// $pdo ya está disponible desde registro_process.php -> conexion.php
+require_once __DIR__ . '/../../backend/db/conexion.php';
 
-$mensaje     = "";
-$tipo_mensaje = "";
-$form_data   = [];
-
-if (isset($_POST['registrar'])) {
-
-    $form_data = [
-        'dni'        => trim($_POST['dni']),
-        'nombres'    => trim($_POST['nombres']),
-        'apellidos'  => trim($_POST['apellidos']),
-        'correo'     => trim($_POST['correo']),
-        'tipo'       => $_POST['tipo'],
-        'contrasena' => $_POST['contrasena'],
-        'confirmar'  => $_POST['confirmar']
-    ];
-
-    $errores = validarFormulario($form_data);
-
-    if (empty($errores)) {
-        $resultado = registrarUsuario($pdo, $form_data); // ✅ usa $pdo (no $conn)
-
-        if ($resultado['exito']) {
-            $mensaje      = "¡Usuario registrado correctamente!";
-            $tipo_mensaje = "exito";
-            $form_data    = [];
-            header("refresh:2;url=../../frontend/login.php"); // ✅ ruta corregida
-        } else {
-            $mensaje      = $resultado['mensaje'];
-            $tipo_mensaje = "error";
-        }
-    } else {
-        $mensaje      = implode("<br>", $errores);
-        $tipo_mensaje = "error";
-    }
+// --- Proteger ruta: solo usuarios logueados ---
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit;
 }
+
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuario - SEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../backend/css/sisvis/registro/registro.css"> <!-- ✅ ruta corregida -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Usuarios - SEM</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <!-- CSS personalizado (AL FINAL, para que sobreescriba) -->
+    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css" />
+    <link rel="stylesheet" href="../../backend/css/sisvis/registro/registro.css" />
+    <link rel="stylesheet" href="../../backend/css/sisvis/registro/modales.css" />
+
+    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <style>
+        /* Ocultar sidebar en móviles por defecto */
+        @media (max-width: 768px) {
+
+            /* Overlay solo cubre el contenido, no la topbar ni el toggle */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                /* debajo del toggle */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+                pointer-events: all;
+                /* sí bloquea el contenido debajo */
+            }
+
+            /* Cuando esté activo */
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar encima del overlay */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: var(--sidebar-w);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1005;
+                /* encima del overlay */
+            }
+
+            /* Toggle siempre encima de todo */
+            .topbar-toggle {
+                z-index: 1010;
+                /* encima de sidebar y overlay */
+                position: relative;
+                /* relativo dentro de la topbar */
+            }
+        }
+
+        /* En escritorio, ocultar botón toggle */
+        @media (min-width: 769px) {
+            .topbar-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
+
 <body>
+    <?php include '../navbar/navbar.php'; ?>
+    <div class="main">
 
-    <div class="top-bar">
-        <div></div><div></div><div></div>
-    </div>
-
-    <div class="wrapper">
-        <div class="brand">
-            <div class="brand-flag">
-                <div></div><div></div><div></div>
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <button id="toggleSidebar" class="topbar-toggle">☰</button>
+            <div class="topbar-title">Lista de <span>Empadronamiento</span></div>
+            <div class="topbar-right">
+                <span class="badge-tag">En vivo</span>
+                <div class="user-chip">
+                    <div class="user-avatar"><?= htmlspecialchars($userInitial) ?></div>
+                    <?= htmlspecialchars($userName) ?>
+                </div>
             </div>
-            <span class="brand-name">Sistema Nacional</span>
-        </div>
+        </header>
 
-        <div class="card">
-            <div class="card-title">Registro de <span>Usuario</span></div>
-            <div class="card-sub">Completa todos los campos para registrarte</div>
-            <hr/>
+        <div class="container-fluid p-4">
+            <div class="usuarios-alert-container"></div>
 
-            <?php if ($mensaje != ""): ?>
-                <div class="mensaje <?php echo $tipo_mensaje; ?>">
-                    <?php echo $mensaje; ?>
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="material-icons me-2">people</i> Gestión de Usuarios</h4>
+                    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modalCrearUsuario">
+                        <i class="material-icons me-1">person_add</i> Nuevo Usuario
+                    </button>
                 </div>
-            <?php endif; ?>
-
-            <form method="POST" action="">
-
-                <div class="field">
-                    <label for="dni">DNI</label>
-                    <div class="input-wrap">
-                        <span class="icon">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                <line x1="9" y1="9" x2="15" y2="15"/>
-                                <line x1="15" y1="9" x2="9" y2="15"/>
-                            </svg>
-                        </span>
-                        <input type="text" id="dni" name="dni" placeholder="12345678" maxlength="8"
-                               value="<?php echo isset($form_data['dni']) ? htmlspecialchars($form_data['dni']) : ''; ?>" required>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table id="tablaUsuarios" class="table table-hover table-striped w-100">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombres</th>
+                                    <th>Apellido Paterno</th>
+                                    <th>Apellido Materno</th>
+                                    <th>DNI</th>
+                                    <th>Correo</th>
+                                    <th>Tipo Usuario</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- Cargado vía JS --></tbody>
+                        </table>
                     </div>
                 </div>
-
-                <div class="field">
-                    <label for="nombres">Nombres</label>
-                    <div class="input-wrap">
-                        <span class="icon">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        </span>
-                        <input type="text" id="nombres" name="nombres" placeholder="Juan Carlos"
-                               value="<?php echo isset($form_data['nombres']) ? htmlspecialchars($form_data['nombres']) : ''; ?>" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label for="apellidos">Apellidos</label>
-                    <div class="input-wrap">
-                        <span class="icon">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        </span>
-                        <input type="text" id="apellidos" name="apellidos" placeholder="Pérez García"
-                               value="<?php echo isset($form_data['apellidos']) ? htmlspecialchars($form_data['apellidos']) : ''; ?>" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label for="correo">Correo Electrónico</label>
-                    <div class="input-wrap">
-                        <span class="icon">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                <polyline points="22,6 12,13 2,6"/>
-                            </svg>
-                        </span>
-                        <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com"
-                               value="<?php echo isset($form_data['correo']) ? htmlspecialchars($form_data['correo']) : ''; ?>" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label for="tipo">Tipo de Cuenta</label>
-                    <div class="input-wrap">
-                        <span class="icon">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/>
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            </svg>
-                        </span>
-                        <select id="tipo" name="tipo" required>
-                            <option value="">Seleccione tipo de cuenta</option>
-                            <option value="Administrador" <?php echo (isset($form_data['tipo']) && $form_data['tipo'] == 'Administrador') ? 'selected' : ''; ?>>Administrador</option>
-                            <option value="Empadronador"  <?php echo (isset($form_data['tipo']) && $form_data['tipo'] == 'Empadronador')  ? 'selected' : ''; ?>>Empadronador</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label for="contrasena">Contraseña</label>
-                    <div class="input-wrap">
-                        <span class="icon">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2"/>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                            </svg>
-                        </span>
-                        <input type="password" id="contrasena" name="contrasena" placeholder="•••••••• (mínimo 6 caracteres)" required>
-                        <button type="button" class="toggle-btn" onclick="togglePassword('contrasena', this)">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label for="confirmar">Confirmar Contraseña</label>
-                    <div class="input-wrap">
-                        <span class="icon">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2"/>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                            </svg>
-                        </span>
-                        <input type="password" id="confirmar" name="confirmar" placeholder="••••••••" required>
-                        <button type="button" class="toggle-btn" onclick="togglePassword('confirmar', this)">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" name="registrar" class="btn">
-                    Registrar Usuario
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                        <polyline points="12 5 19 12 12 19"/>
-                    </svg>
-                </button>
-            </form>
-
-            <div class="foot-note">
-                ¿Ya tienes una cuenta? <a href="../../frontend/login.php">Inicia sesión aquí</a> <!-- ✅ ruta corregida -->
             </div>
         </div>
 
-        <div class="status-row">
-            <span class="status-dot"></span> Conexión segura
+        <!-- ====================== MODALES ====================== -->
+        <!-- Crear Usuario -->
+        <div class="modal fade" id="modalCrearUsuario" tabindex="-1" data-bs-backdrop="static">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title"><i class="material-icons me-2">person_add</i> Crear Nuevo Usuario</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formCrearUsuario">
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label for="dni" class="form-label">DNI *</label>
+                                    <input type="text" id="dni" class="form-control" maxlength="8" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nombres" class="form-label">Nombres *</label>
+                                    <input type="text" id="nombres" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label for="ape_pat" class="form-label">Apellido Paterno *</label>
+                                    <input type="text" id="ape_pat" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="ape_mat" class="form-label">Apellido Materno *</label>
+                                    <input type="text" id="ape_mat" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label for="correo" class="form-label">Correo *</label>
+                                    <input type="email" id="correo" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tipo_usuario" class="form-label">Tipo Usuario *</label>
+                                    <select id="tipo_usuario" class="form-select" required></select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pass" class="form-label">Contraseña Temporal *</label>
+                                <div class="input-group">
+                                    <input type="password" id="pass" class="form-control" required>
+                                    <button type="button" class="btn btn-outline-secondary" id="btnGenerarPass">
+                                        <i class="material-icons">refresh</i>
+                                    </button>
+                                </div>
+                                <small class="text-muted">O generar automáticamente</small>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="material-icons me-1">cancel</i> Cancelar</button>
+                        <button class="btn btn-primary" id="btnGuardarUsuario"><i class="material-icons me-1">save</i> Crear Usuario</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Editar Usuario -->
+        <div class="modal fade" id="modalEditarUsuario" tabindex="-1" data-bs-backdrop="static">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning text-dark">
+                        <h5 class="modal-title"><i class="material-icons me-2">edit</i> Editar Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formEditarUsuario">
+                            <input type="hidden" id="edit_id_usuario">
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label for="edit_nombres" class="form-label">Nombres</label>
+                                    <input type="text" id="edit_nombres" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_ape_pat" class="form-label">Apellido Paterno</label>
+                                    <input type="text" id="edit_ape_pat" class="form-control">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label for="edit_ape_mat" class="form-label">Apellido Materno</label>
+                                    <input type="text" id="edit_ape_mat" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_dni" class="form-label">DNI</label>
+                                    <input type="text" id="edit_dni" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label for="edit_correo" class="form-label">Correo</label>
+                                    <input type="email" id="edit_correo" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="edit_tipo_usuario" class="form-label">Tipo Usuario</label>
+                                    <select id="edit_tipo_usuario" class="form-select"></select>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <div class="col-md-6">
+                                    <label for="edit_estado" class="form-label">Estado</label>
+                                    <select id="edit_estado" class="form-select">
+                                        <option value="1">Activo</option>
+                                        <option value="0">Inactivo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="material-icons me-1">cancel</i> Cancelar</button>
+                        <button class="btn btn-warning" id="btnActualizarUsuario"><i class="material-icons me-1">update</i> Actualizar</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- MODAL CAMBIAR CONTRASEÑA -->
+    <div class="modal fade" id="modalPasswordUsuario" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content usuarios-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="material-icons me-2">lock_reset</i> Cambiar Contraseña</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPasswordUsuario">
+                        <input type="hidden" id="pass_id_usuario">
+                        <div class="usuarios-section">
+                            <h6 class="usuarios-section-title"><i class="material-icons">vpn_key</i> Nueva Contraseña</h6>
+                            <div class="mb-3"><label>Contraseña Nueva *</label><input type="password" class="form-control" id="nueva_password" required></div>
+                            <div class="mb-3"><label>Confirmar Contraseña *</label><input type="password" class="form-control" id="confirmar_password" required></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="material-icons me-1">cancel</i> Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btnGuardarPassword"><i class="material-icons me-1">save</i> Guardar Nueva Contraseña</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================== SCRIPTS ====================== -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
+    <script src="../../backend/js/usuarios/usuarios.js"></script>
 
     <script>
-        function togglePassword(id, btn) {
-            const input = document.getElementById(id);
-            const isPass = input.type === 'password';
-            input.type = isPass ? 'text' : 'password';
-            btn.querySelector('svg').innerHTML = isPass
-                ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`
-                : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
-        }
-    </script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dniInput = document.getElementById('dni');
+            const nombresInput = document.getElementById('nombres');
+            const apePatInput = document.getElementById('ape_pat');
+            const apeMatInput = document.getElementById('ape_mat');
+            const correoInput = document.getElementById('correo');
 
+            dniInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    buscarReniec();
+                }
+            });
+
+            dniInput.addEventListener('blur', buscarReniec);
+
+            function buscarReniec() {
+                const dni = dniInput.value.trim();
+                if (dni.length !== 8 || isNaN(dni)) return;
+
+                fetch('../../backend/php/api/api_reniec.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            numdni: dni
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Nombres
+                            let fullName = `${data.prenombres}`.replace(/\s+/g, ' ').trim();
+                            nombresInput.value = fullName;
+                            nombresInput.focus();
+
+                            // Apellidos separados
+                            apePatInput.value = data.apPrimer || '';
+                            apeMatInput.value = data.apSegundo || '';
+
+                            // Autocompletar correo si no tiene '@'
+                            if (!correoInput.value.includes('@')) {
+                                const primerNombre = data.prenombres.split(' ')[0];
+                                const primerApellido = data.apPrimer.split(' ')[0];
+                                correoInput.value = (primerNombre[0] + primerApellido).toLowerCase() + '@sem.gob.pe';
+                            }
+                        } else {
+                            nombresInput.value = '';
+                            apePatInput.value = '';
+                            apeMatInput.value = '';
+                            correoInput.value = '';
+                        }
+                    })
+                    .catch(err => console.error('Error al consultar RENIEC:', err));
+            }
+        });
+    </script>
 </body>
+
 </html>

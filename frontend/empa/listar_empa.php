@@ -7,215 +7,339 @@ require_once '../../backend/php/empa/listar_empadronamiento.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Listado de Empadronamientos — SEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../backend/css/empa/listar_empa.css">
-    <link rel="stylesheet" href="../../backend/css/sisvis/escritorio.css">
-    <!-- DataTables -->
+    <title>Listado de Empadronamientos</title>
+    <link rel="stylesheet" href="../../backend/css/navbar/navbar.css" />
+    <link rel="stylesheet" href="../../backend/css/empa/listar_empa.css" />
+    <link rel="stylesheet" href="../../backend/css/empa/modal_empa.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png">
+    <link rel="icon" type="image/png" href="../../backend/img/logoPisco.png" />
+    <style>
+        /* Ocultar sidebar en móviles por defecto */
+        @media (max-width: 768px) {
+
+            /* Overlay solo cubre el contenido, no la topbar ni el toggle */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                /* debajo del toggle */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease;
+                pointer-events: all;
+                /* sí bloquea el contenido debajo */
+            }
+
+            /* Cuando esté activo */
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar encima del overlay */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: var(--sidebar-w);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1005;
+                /* encima del overlay */
+            }
+
+            /* Toggle siempre encima de todo */
+            .topbar-toggle {
+                z-index: 1010;
+                /* encima de sidebar y overlay */
+                position: relative;
+                /* relativo dentro de la topbar */
+            }
+        }
+
+        /* En escritorio, ocultar botón toggle */
+        @media (min-width: 769px) {
+            .topbar-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
+    <?php include "../navbar/navbar.php"; ?>
+    <div class="main">
 
-<div class="body-overlay"></div>
-
-<!-- ══ SIDEBAR ══ -->
-<?php include "../navbar/navbar.php"; ?>
-
-<!-- ══ MAIN ══ -->
-<div class="table-container" id="mainContent">
-
-    <!-- TOPBAR -->
-    <header class="topbar">
-        <div class="topbar-left">
-            <button class="topbar-toggle" id="sidebarCollapse" aria-label="Toggle sidebar">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="3" y1="6" x2="21" y2="6"/>
-                    <line x1="3" y1="12" x2="21" y2="12"/>
-                    <line x1="3" y1="18" x2="21" y2="18"/>
-                </svg>
-            </button>
-            <div class="topbar-title">Lista de <span>Empadronamientos</span></div>
-        </div>
-        <div class="topbar-right">
-            <a href="registrar_empa.php" class="btn-new">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Nuevo registro
-            </a>
-        </div>
-    </header>
-
-    <!-- CONTENT -->
-    <div class="content">
-
-        <!-- Barra de búsqueda y filtro custom -->
-        <div class="search-bar">
-            <div class="search-wrap">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-                <input type="text" id="customSearch" placeholder="Buscar por solicitante, DNI, empadronador…">
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <button id="toggleSidebar" class="topbar-toggle">☰</button>
+            <div class="topbar-title">Lista de <span>Empadronamiento</span></div>
+            <div class="topbar-right">
+                <span class="badge-tag">En vivo</span>
+                <div class="user-chip">
+                    <div class="user-avatar"><?= htmlspecialchars($userInitial) ?></div>
+                    <?= htmlspecialchars($userName) ?>
+                </div>
             </div>
-            <select id="filterCSE" class="filter-select">
-                <option value="">Todos los niveles CSE</option>
-                <option value="NO POBRE">No Pobre</option>
-                <option value="POBRE">Pobre</option>
-                <option value="POBRE EXTREMO">Pobre Extremo</option>
-            </select>
-        </div>
+        </header>
 
-        <!-- TABLA -->
-        <div id="empadronamientos_wrapper">
+        <div class="table-container">
             <table id="empadronamientos" class="display nowrap" style="width:100%">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tipo Soli.</th>
-                        <th>Tipo Remi.</th>
-                        <th>Fecha</th>
+                        <th>Tipo Solicitud</th>
+                        <th>Tipo Remisión</th>
                         <th>D100</th>
+                        <th>Fecha</th>
                         <th>S100</th>
-                        <th>F. S100</th>
+                        <th>Fecha S100</th>
                         <th>FSU</th>
-                        <th>F. FSU</th>
-                        <th>Doc.</th>
+                        <th>Fecha FSU</th>
+                        <th>Tipo Doc</th>
                         <th>DNI</th>
                         <th>Solicitante</th>
-                        <th>Integ.</th>
-                        <th>Archiv.</th>
+                        <th>Integrantes</th>
+                        <th>Archivador</th>
                         <th>Año</th>
                         <th>Tipo CSE</th>
                         <th>Inicio CSE</th>
                         <th>Final CSE</th>
                         <th>Empadronador</th>
-                        <th>Obs.</th>
-                        <th>Acciones</th>
+                        <th>Observaciones</th>
+                        <?php if ($_SESSION['user_type'] == 1): ?>
+                            <th>Acciones</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($empadronamientos as $e):
-                        $cse = $e['TipoCSE'] ?? '';
-                        $badgeClass = match($cse) {
-                            'NO POBRE'      => 'no-pobre',
-                            'POBRE'         => 'pobre',
-                            'POBRE EXTREMO' => 'extremo',
-                            default         => ''
-                        };
-                    ?>
+                    <?php foreach ($empadronamientos as $e): ?>
                         <tr>
-                            <td><?= htmlspecialchars($e['IdEmpa']) ?></td>
-                            <td><?= htmlspecialchars($e['TipoSolicitud']) ?></td>
-                            <td><?= htmlspecialchars($e['TipoRemision']) ?></td>
-                            <td><?= htmlspecialchars($e['Fecha']) ?></td>
-                            <td><?= htmlspecialchars($e['Formato_D100']) ?></td>
-                            <td><?= htmlspecialchars($e['S100']) ?></td>
-                            <td><?= htmlspecialchars($e['Fecha_S100']) ?></td>
-                            <td><?= htmlspecialchars($e['FSU']) ?></td>
-                            <td><?= htmlspecialchars($e['Fecha_FSU']) ?></td>
-                            <td><?= htmlspecialchars($e['TipoDocu']) ?></td>
-                            <td><?= htmlspecialchars($e['DNI_Soli']) ?></td>
-                            <td><?= htmlspecialchars($e['Solicitante']) ?></td>
-                            <td><?= htmlspecialchars($e['Integrantes']) ?></td>
-                            <td><?= htmlspecialchars($e['Archivador']) ?></td>
-                            <td><?= htmlspecialchars($e['AÑO']) ?></td>
-                            <td>
-                                <?php if ($badgeClass): ?>
-                                    <span class="badge-cse <?= $badgeClass ?>"><?= htmlspecialchars($cse) ?></span>
-                                <?php else: ?>
-                                    <?= htmlspecialchars($cse) ?>
-                                <?php endif; ?>
-                            </td>
-                            <td><?= htmlspecialchars($e['InicioCSE']) ?></td>
-                            <td><?= htmlspecialchars($e['FinalCSE']) ?></td>
-                            <td><?= htmlspecialchars($e['Empadronador']) ?></td>
-                            <td><?= htmlspecialchars($e['Observaciones']) ?></td>
-                            <td>
-                                <div class="action-btns">
-                                    <a href="editar_empa.php?id=<?= $e['IdEmpa'] ?>" class="btn-icon primary" title="Editar">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                        </svg>
-                                    </a>
-                                    <a href="eliminar_empa.php?id=<?= $e['IdEmpa'] ?>"
-                                       class="btn-icon danger"
-                                       title="Eliminar"
-                                       onclick="return confirm('¿Eliminar este registro?')">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="3 6 5 6 21 6"/>
-                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                                            <path d="M10 11v6M14 11v6"/>
-                                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </td>
+                            <td><?= $e['IdEmpa'] ?></td>
+                            <td><?= $e['TipoSolicitud'] ?></td>
+                            <td><?= $e['TipoRemision'] ?></td>
+                            <td><?= $e['Formato_D100'] ?></td>
+                            <td><?= $e['Fecha'] ?></td>
+                            <td><?= $e['S100'] ?></td>
+                            <td><?= $e['Fecha_S100'] ?></td>
+                            <td><?= $e['FSU'] ?></td>
+                            <td><?= $e['Fecha_FSU'] ?></td>
+                            <td><?= $e['TipoDocu'] ?></td>
+                            <td><?= $e['DNI_Soli'] ?></td>
+                            <td><?= $e['Solicitante'] ?></td>
+                            <td><?= $e['Integrantes'] ?></td>
+                            <td><?= $e['Archivador'] ?></td>
+                            <td><?= $e['AÑO'] ?></td>
+                            <td><?= $e['TipoCSE'] ?></td>
+                            <td><?= $e['InicioCSE'] ?></td>
+                            <td><?= $e['FinalCSE'] ?></td>
+                            <td><?= $e['Empadronador'] ?></td>
+                            <td><?= $e['Observaciones'] ?></td>
+                            <?php if ($_SESSION['user_type'] == 1): ?>
+                                <td>
+                                    <button class="btn-editar" data-id="<?= $e['IdEmpa'] ?>">
+                                        ✏️ Editar
+                                    </button>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
 
-    </div><!-- /content -->
-</div><!-- /table-container -->
+        <!-- MODAL DE EDICIÓN -->
+        <div id="modalEditar" class="modal">
+            <div class="modal-contenido">
 
-<script>
-$(document).ready(function () {
-    const table = $('#empadronamientos').DataTable({
-        responsive: true,
-        pageLength: 15,
-        lengthMenu: [10, 15, 25, 50, 100],
-        dom: 'lrtip',
-        language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
-        order: [[0, 'desc']]
-    });
+                <span class="cerrar">&times;</span>
+                <h3>Editar Empadronamiento</h3>
 
-    // Búsqueda global custom
-    $('#customSearch').on('keyup', function () {
-        table.search(this.value).draw();
-    });
+                <form id="formEditar">
 
-    // Filtro por TipoCSE (columna 15)
-    $('#filterCSE').on('change', function () {
-        table.column(15).search(this.value).draw();
-    });
+                    <input type="hidden" name="id" id="edit_id">
 
-    // Sidebar toggle
-    const sidebar     = document.querySelector('.sidebar');
-    const mainContent = document.getElementById('mainContent');
-    const overlay     = document.querySelector('.body-overlay');
-    const isMobile    = () => window.innerWidth <= 768;
+                    <label>Tipo Solicitud</label>
+                    <input type="text" name="tipo_solicitud" id="edit_tipo_soli">
 
-    document.getElementById('sidebarCollapse').addEventListener('click', () => {
-        if (isMobile()) {
-            sidebar.classList.toggle('mobile-active');
-            overlay.classList.toggle('active');
-        } else {
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('collapsed');
-        }
-    });
+                    <label>Tipo Remisión</label>
+                    <input type="text" name="tipo_remision" id="edit_tipo_remi">
 
-    overlay.addEventListener('click', () => {
-        sidebar.classList.remove('mobile-active');
-        overlay.classList.remove('active');
-    });
+                    <label>DNI</label>
+                    <input type="number" name="dni_solicitante" id="edit_dni">
 
-    window.addEventListener('resize', () => {
-        if (!isMobile()) {
-            sidebar.classList.remove('mobile-active');
-            overlay.classList.remove('active');
-        }
-    });
-});
-</script>
+                    <label>Solicitante</label>
+                    <input type="text" name="nombre_solicitante" id="edit_solicitante">
+
+                    <label>Integrantes</label>
+                    <input type="number" name="num_integrantes" id="edit_integrantes">
+
+                    <label>Archivador</label>
+                    <input type="number" name="num_archivador" id="edit_archivador">
+
+                    <label>Año</label>
+                    <input type="number" name="anio" id="edit_anio">
+
+                    <label>Tipo CSE</label>
+                    <select name="tipo_cse" id="edit_tipo_cse">
+                        <option>NO POBRE</option>
+                        <option>POBRE</option>
+                        <option>POBRE EXTREMO</option>
+                    </select>
+
+                    <label>Empadronador</label>
+                    <input type="text" name="empadronador" id="edit_empadronador">
+
+                    <label>Observaciones</label>
+                    <textarea name="observaciones" id="edit_observaciones"></textarea>
+
+                    <br>
+
+                    <button type="submit">Guardar cambios</button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#empadronamientos').DataTable({
+                responsive: true,
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                },
+                order: [
+                    [0, 'desc']
+                ]
+            });
+        });
+    </script>
+
+    <!-- SCRIPT PARA EL MODAL Y EDITAR REGISTRO -->
+    <script>
+        // ABRIR MODAL Y CARGAR DATOS
+        $(document).on("click", ".btn-editar", function() {
+            let id = $(this).data("id");
+            const modal = $("#modalEditar");
+
+            // Mostrar modal
+            modal.addClass("activo");
+
+            // Obtener datos vía AJAX
+            $.ajax({
+                url: "../../backend/php/empa/obtener_empa.php",
+                type: "GET",
+                data: {
+                    id: id
+                },
+                dataType: "json",
+                success: function(data) {
+                    $("#edit_id").val(data.IdEmpa);
+                    $("#edit_tipo_soli").val(data.IdTipoSoli);
+                    $("#edit_tipo_remi").val(data.IdTipoRemi);
+                    $("#edit_dni").val(data.DNI_Soli);
+                    $("#edit_solicitante").val(data.Solicitante);
+                    $("#edit_integrantes").val(data.Integrantes);
+                    $("#edit_archivador").val(data.Archivador);
+                    $("#edit_anio").val(data.AÑO);
+                    $("#edit_tipo_cse").val(data.TipoCSE);
+                    $("#edit_empadronador").val(data.Empadronador);
+                    $("#edit_observaciones").val(data.Observaciones);
+                },
+                error: function() {
+                    alert("Error al obtener los datos del registro");
+                }
+            });
+        });
+
+        // CERRAR MODAL (botón X)
+        $(document).on("click", ".cerrar", function() {
+            $("#modalEditar").removeClass("activo");
+        });
+
+        // CERRAR MODAL SI HACEN CLICK FUERA DEL CONTENIDO
+        $(window).on("click", function(e) {
+            const modal = $("#modalEditar");
+            if ($(e.target).is(modal)) {
+                modal.removeClass("activo");
+            }
+        });
+
+        // GUARDAR CAMBIOS
+        $("#formEditar").submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: "../../backend/php/empa/actualizar_empa.php",
+                type: "POST",
+                data: $(this).serialize(),
+                success: function() {
+                    alert("Registro actualizado correctamente");
+                    $("#modalEditar").removeClass("activo");
+                    location.reload(); // Opcional: reemplazar con actualización de tabla sin recargar
+                },
+                error: function() {
+                    alert("Error al actualizar el registro");
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dniInput = document.querySelector('input[name="dni_solicitante"]');
+            const nombreInput = document.querySelector('input[name="nombre_solicitante"]');
+
+            dniInput.addEventListener('input', function() {
+                const dni = dniInput.value.trim();
+
+                if (dni.length === 8 && /^\d{8}$/.test(dni)) {
+                    fetch('../../backend/php/api/api_reniec.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                numdni: dni
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                // Concatenar y limpiar espacios extras
+                                let fullName = `${data.prenombres} ${data.apPrimer} ${data.apSegundo}`;
+                                fullName = fullName.replace(/\s+/g, ' ').trim();
+                                nombreInput.value = fullName;
+                                nombreInput.focus();
+                            } else {
+                                alert(data.message || 'No se pudo obtener el nombre del DNI');
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Error al consultar RENIEC');
+                        });
+                } else {
+                    nombreInput.value = '';
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>

@@ -1,0 +1,155 @@
+/* MODALES - estilo oscuro y limpio */
+.modal-content {
+    background-color: #1a1e2a !important;
+    color: #e8eaf0 !important;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* Headers modales: diferenciar colores según tipo */
+.modal-header.bg-primary {
+    background-color: #C8102E !important;
+    /* rojo SEM */
+    color: white !important;
+    border-bottom: none;
+}
+
+.modal-header.bg-warning {
+    background-color: #ffb300 !important;
+    /* amarillo bootstrap */
+    color: #1a1e2a !important;
+    border-bottom: none;
+}
+
+.modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Títulos */
+.modal-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+/* Botones cerrar */
+.btn-close {
+    filter: invert(1);
+    /* ícono blanco para fondo oscuro */
+    opacity: 0.8;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+/* Cuerpo del modal */
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* Formularios dentro de modal */
+.form-control,
+.form-select {
+    background-color: #222831 !important;
+    border: 1px solid #444 !important;
+    color: #e8eaf0 !important;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #222831 !important;
+    border-color: #C8102E !important;
+    color: #fff !important;
+    box-shadow: none;
+}
+
+/* Labels */
+.form-label {
+    color: #e8eaf0;
+    font-weight: 500;
+}
+
+/* Footer modal */
+.modal-footer {
+    background-color: #13161e;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 1.5rem;
+}
+
+/* Botones en modal */
+.modal-footer .btn {
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Botones específicos */
+.btn-primary {
+    background-color: #C8102E;
+    border-color: #C8102E;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #a20a1e;
+    border-color: #a20a1e;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #444;
+    border-color: #444;
+    color: #e8eaf0;
+}
+
+.btn-secondary:hover {
+    background-color: #555;
+    border-color: #555;
+    color: #fff;
+}
+
+.btn-warning {
+    background-color: #ffb300;
+    border-color: #ffb300;
+    color: #1a1e2a;
+}
+
+.btn-warning:hover {
+    background-color: #e6a700;
+    border-color: #e6a700;
+    color: #1a1e2a;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    color: white;
+}
+
+/* Input group button (generar pass) */
+.input-group .btn-outline-secondary {
+    background-color: #222831;
+    border-color: #444;
+    color: #e8eaf0;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background-color: #C8102E;
+    border-color: #C8102E;
+    color: white;
+}
+
+/* Texto pequeño */
+.text-muted {
+    color: #aaa !important;
+}

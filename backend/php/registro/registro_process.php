@@ -1,5 +1,4 @@
 <?php
-// backend/php/registro/registro_process.php
 require_once __DIR__ . '/../../db/conexion.php'; // ✅ ruta absoluta desde este archivo
 
 function validarFormulario($data) {
