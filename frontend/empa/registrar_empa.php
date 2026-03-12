@@ -9,6 +9,7 @@ $anioActual      = date('Y');
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -140,6 +141,7 @@ $anioActual      = date('Y');
         }
     </style>
 </head>
+
 <body>
     <?php include "../navbar/navbar.php"; ?>
 
@@ -228,13 +230,13 @@ $anioActual      = date('Y');
                     <!-- DNI -->
                     <div class="form-group">
                         <label>DNI del Solicitante</label>
-                        <input type="number" name="dni_solicitante" required>
+                        <input type="text" name="dni_solicitante" id="dniInput" required>
                     </div>
 
                     <!-- Nombre ancho completo -->
                     <div class="form-group span-2">
                         <label>Nombre del Solicitante</label>
-                        <input type="text" name="nombre_solicitante" required>
+                        <input type="text" name="nombre_solicitante" id="nombreInput" required>
                     </div>
 
                     <!-- Integrantes -->
@@ -307,67 +309,115 @@ $anioActual      = date('Y');
 
     <script src="../../backend/js/navbar/sidebar-toggle.js"></script>
 
-<script>
-// Flatpickr
-flatpickr(".datepicker", {
-    dateFormat: "Y-m-d",
-    locale: { firstDayOfWeek: 1 }
-});
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ------------------------------
+            // 1️⃣ Flatpickr para fechas
+            // ------------------------------
+            flatpickr(".datepicker", {
+                dateFormat: "Y-m-d",
+                locale: {
+                    firstDayOfWeek: 1
+                }
+            });
 
-// Limitar dígitos
-[['d100',7],['s100',8],['fsu',8],['dni_solicitante',8]].forEach(([name, max]) => {
-    document.querySelector(`input[name="${name}"]`)?.addEventListener('input', function() {
-        if (this.value.length > max) this.value = this.value.slice(0, max);
-    });
-});
+            // ------------------------------
+            // 2️⃣ Limitar dígitos y permitir solo números
+            // ------------------------------
+            const camposNumericos = [
+                ['d100', 7],
+                ['s100', 8],
+                ['fsu', 8],
+                ['dni_solicitante', 8]
+            ];
 
-// RENIEC autocomplete
-document.getElementById('dniInput')?.addEventListener('input', function () {
-    const dni = this.value.trim();
-    const nombreInput = document.getElementById('nombreInput');
-    if (dni.length === 8 && /^\d{8}$/.test(dni)) {
-        fetch('../../backend/php/api/api_reniec.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ numdni: dni })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.status === 'success') {
-                nombreInput.value = `${data.prenombres} ${data.apPrimer} ${data.apSegundo}`.replace(/\s+/g, ' ').trim();
+            camposNumericos.forEach(([name, max]) => {
+                const input = document.querySelector(`input[name="${name}"]`);
+                if (!input) return;
+
+                input.addEventListener('input', function() {
+                    // Solo permitir números
+                    this.value = this.value.replace(/\D/g, '');
+                    // Limitar longitud
+                    if (this.value.length > max) this.value = this.value.slice(0, max);
+                });
+            });
+
+            // ------------------------------
+            // 3️⃣ Autocompletado RENIEC
+            // ------------------------------
+            const dniInput = document.getElementById('dniInput');
+            const nombreInput = document.getElementById('nombreInput');
+
+            if (dniInput && nombreInput) {
+                dniInput.addEventListener('input', () => {
+                    const dni = dniInput.value.trim();
+                    if (dni.length === 8 && /^\d{8}$/.test(dni)) {
+                        fetch('../../backend/php/api/api_reniec.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    numdni: dni
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    nombreInput.value = `${data.prenombres} ${data.apPrimer} ${data.apSegundo}`.replace(/\s+/g, ' ').trim();
+                                }
+                            })
+                            .catch(console.error);
+                    } else {
+                        nombreInput.value = '';
+                    }
+                });
             }
-        })
-        .catch(console.error);
-    } else {
-        nombreInput.value = '';
-    }
-});
 
-// Sidebar toggle
-const sidebar     = document.querySelector('.sidebar');
-const mainContent = document.getElementById('mainContent');
-const overlay     = document.querySelector('.body-overlay');
-const isMobile    = () => window.innerWidth <= 768;
+            const anioSelect = document.getElementById('anioSelect');
+            if (anioSelect) {
+                const anioActual = new Date().getFullYear();
+                for (let i = anioActual; i >= 2000; i--) {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.textContent = i;
+                    anioSelect.appendChild(opt);
+                }
+            }
 
-document.getElementById('sidebarCollapse').addEventListener('click', () => {
-    if (isMobile()) {
-        sidebar.classList.toggle('mobile-active');
-        overlay.classList.toggle('active');
-    } else {
-        sidebar.classList.toggle('collapsed');
-        mainContent.classList.toggle('collapsed');
-    }
-});
-overlay.addEventListener('click', () => {
-    sidebar.classList.remove('mobile-active');
-    overlay.classList.remove('active');
-});
-window.addEventListener('resize', () => {
-    if (!isMobile()) {
-        sidebar.classList.remove('mobile-active');
-        overlay.classList.remove('active');
-    }
-});
-</script>
+            // ------------------------------
+            // 5️⃣ Sidebar toggle
+            // ------------------------------
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.body-overlay');
+            const mainContent = document.getElementById('mainContent');
+
+            const isMobile = () => window.innerWidth <= 768;
+
+            document.getElementById('toggleSidebar')?.addEventListener('click', () => {
+                if (isMobile()) {
+                    sidebar.classList.toggle('mobile-active');
+                    overlay.classList.toggle('active');
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent?.classList.toggle('collapsed');
+                }
+            });
+
+            overlay?.addEventListener('click', () => {
+                sidebar.classList.remove('mobile-active');
+                overlay.classList.remove('active');
+            });
+
+            window.addEventListener('resize', () => {
+                if (!isMobile()) {
+                    sidebar.classList.remove('mobile-active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>
